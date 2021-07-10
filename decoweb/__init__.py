@@ -56,7 +56,7 @@ def limit_jobs(*, limit: int):
         async def limited_call(*args, **kwargs):
             nonlocal counter
             if counter == 0:
-                raise TooManyCalls()
+                raise TooManyCalls(f"Too many calls to {str(func)}! {limit=}")
             try:
                 counter -= 1
                 return await func(*args, **kwargs)
