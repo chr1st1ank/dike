@@ -7,15 +7,15 @@ from typing import Callable, List, Sequence, Iterable, Awaitable, Union
 
 
 def wrap_in_coroutine(func: Callable) -> Callable:
-    """Decorator to wrap a function into a coroutine.
+    """Decorator to wrap a function into a coroutine function.
 
-    If `func` is already a coroutine it is returned as-is.
+    If `func` is already a coroutine function it is returned as-is.
 
     Args:
-        func: A callable object (function or coroutine)
+        func: A callable object (function or coroutine function)
 
     Returns:
-        A coroutine which executes `func`.
+        A coroutine function which executes `func`.
     """
     if inspect.iscoroutinefunction(func):
         return func
@@ -32,17 +32,17 @@ class TooManyCalls(Exception):
 
 
 def limit_jobs(*, limit: int):
-    """Decorator to limit the number of concurrent calls to a coroutine.
+    """Decorator to limit the number of concurrent calls to a coroutine function.
 
     Args:
         limit: The maximum number of ongoing calls allowed at any time
 
     Returns:
-        The given coroutine with added concurrency protection
+        The given coroutine function with added concurrency protection
 
     Raises:
         TooManyCalls: The decorated function raises a decoweb.ToomanyCalls exception
-            if it is called more than `limit` times concurrently.
+            if it is called while already running `limit` times concurrently.
     """
     if not limit >= 0:
         raise ValueError("Error when wrapping f(). Limit must be >= 0!")
