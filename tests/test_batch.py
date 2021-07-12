@@ -30,6 +30,28 @@ def test_single_items_batchsize_reached():
     asyncio.run(run_test())
 
 
+def test_single_items_kwargs_batchsize_reached():
+    @decoweb.batch(target_batch_size=3, max_waiting_time=10)
+    async def f(arg1, arg2):
+        assert arg1 == [0, 1, 2]
+        assert arg2 == ["a", "b", "c"]
+        return [10, 11, 12]
+
+    async def run_test():
+        result = await asyncio.wait_for(
+            asyncio.gather(
+                f(arg1=[0], arg2=["a"]),
+                f(arg1=[1], arg2=["b"]),
+                f(arg2=["c"], arg1=[2]),
+            ),
+            timeout=1.0,
+        )
+
+        assert result == [[10], [11], [12]]
+
+    asyncio.run(run_test())
+
+
 def test_single_items_timeout():
     @decoweb.batch(target_batch_size=10, max_waiting_time=0.01)
     async def f(arg1, arg2):
@@ -63,6 +85,28 @@ def test_multi_batch_size_reached():
                 f([0], ["a"]),
                 f([1, 2, 3], ["b", "c", "d"]),
                 f([4], ["e"]),
+            ),
+            timeout=0.1,
+        )
+
+        assert result == [[10], [11, 12, 13], [14]]
+
+    asyncio.run(run_test())
+
+
+def test_multi_args_and_kwargs_batch_size_reached():
+    @decoweb.batch(target_batch_size=5, max_waiting_time=2)
+    async def f(arg1, arg2):
+        assert arg1 == [0, 1, 2, 3, 4]
+        assert arg2 == ["a", "b", "c", "d", "e"]
+        return [10, 11, 12, 13, 14]
+
+    async def run_test():
+        result = await asyncio.wait_for(
+            asyncio.gather(
+                f([0], arg2=["a"]),
+                f([1, 2, 3], arg2=["b", "c", "d"]),
+                f([4], arg2=["e"]),
             ),
             timeout=0.1,
         )
