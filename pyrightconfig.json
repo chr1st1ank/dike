@@ -10,7 +10,7 @@
     ".vscode",
     "docs",
     "**/__pycache__",
-    "chr1st1ank_dframeio.egg-info"
+    "chr1st1ank_decoweb.egg-info"
   ],
 
   "ignore": [
@@ -19,5 +19,5 @@
 
   "reportMissingImports": true,
   "reportMissingTypeStubs": false,
-  "pythonVersion": "3.8"
+  "pythonVersion": "3.9"
 }

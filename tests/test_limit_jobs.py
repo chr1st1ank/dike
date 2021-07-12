@@ -2,13 +2,10 @@
 import asyncio
 import re
 
-import hypothesis
-import hypothesis.strategies
+import parametrized
+import pytest
 
 import decoweb
-import pytest
-import parametrized
-
 
 concurrency_limit = parametrized.fixture(3, 1, 0, -1, 1.5)
 
