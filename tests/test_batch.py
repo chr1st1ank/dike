@@ -170,36 +170,17 @@ def test_concurrent_calculations_do_not_clash():
     asyncio.run(run_test())
 
 
-def test_illegal_batch_size_leads_to_value_error():
-    pass
+@pytest.mark.parametrize("batch_size", [0, -1, float("-inf")])
+def test_illegal_batch_size_leads_to_value_error(batch_size):
+    with pytest.raises(ValueError):
+        @decoweb.batch(target_batch_size=batch_size, max_waiting_time=1)
+        async def f(arg1):
+            pass
 
 
-def test_illegal_waiting_time_leads_to_value_error():
-    pass
-
-
-# def test_simple_usage_multi_item():
-#     call = 0
-
-#     @decoweb.batch(target_batch_size=5, max_waiting_time=10)
-#     async def f(arg1, arg2):
-#         nonlocal call
-#         if call == 0:
-#             assert arg1 == [0, 1, 2]
-#             assert arg2 == ["a", "b", "c"]
-#         else:
-#             assert arg1 == [0, 1, 2]
-#             assert arg2 == ["a", "b", "c"]
-#         call += 1
-#         return [10, 11, 12]
-
-#     async def run_test():
-#         result = await asyncio.gather(
-#             f([0], ["a"]),
-#             f([1, 2, 3], ["b", "c", "d"]),
-#             f([4], ["e"]),
-#         )
-
-#         assert result == [[10], [11], [12]]
-
-#     asyncio.run(run_test())
+@pytest.mark.parametrize("waiting_time", [0, -1, float("-inf")])
+def test_illegal_waiting_time_leads_to_value_error(waiting_time):
+    with pytest.raises(ValueError):
+        @decoweb.batch(target_batch_size=1, max_waiting_time=waiting_time)
+        async def f(arg1):
+            pass

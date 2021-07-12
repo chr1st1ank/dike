@@ -79,6 +79,10 @@ def batch(*, target_batch_size: int, max_waiting_time: float):
         - The return value of the wrapped function is a single iterable
         - All calls to the underlying function have the same number of positional arguments
     """
+    if not target_batch_size > 0:
+        raise ValueError(f"target_batch_size must be > 0, but got {target_batch_size}")
+    if not max_waiting_time > 0:
+        raise ValueError(f"max_waiting_time must be > 0, but got {max_waiting_time}")
 
     def decorator(func):
         batch_no: int = 0
@@ -106,8 +110,6 @@ def batch(*, target_batch_size: int, max_waiting_time: float):
         @functools.wraps(func)
         async def batching_call(*args):
             my_batch_no = get_batch_no()
-            # elif n_rows_in_queue == 0:
-            #     result_event.clear()
             start_index, stop_index = add_args_to_queue(args)
 
             await wait_for_calculation(my_batch_no)
