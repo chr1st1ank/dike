@@ -1,1 +1,1 @@
-"""Unit test package for decoweb."""
+"""Unit test package for aiodike."""

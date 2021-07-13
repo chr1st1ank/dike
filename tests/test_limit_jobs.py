@@ -1,16 +1,16 @@
-"""Tests for the decoweb.limit_jobs decorator"""
+"""Tests for the aiodike.limit_jobs decorator"""
 import asyncio
 import re
 
 import parametrized
 import pytest
 
-import decoweb
+import aiodike
 
 concurrency_limit = parametrized.fixture(3, 1, 0, -1, 1.5)
 
 
-@decoweb.limit_jobs(limit=2)
+@aiodike.limit_jobs(limit=2)
 async def block_until_released(event: asyncio.Event, arg):
     """Blocks until the given event is sent and then returns arg"""
     await event.wait()
@@ -21,7 +21,7 @@ async def block_until_released(event: asyncio.Event, arg):
 def test_simple_usage(l):
     """Simply wrap a coroutine with different limits and call it once"""
 
-    @decoweb.limit_jobs(limit=l)
+    @aiodike.limit_jobs(limit=l)
     async def f():
         pass
 
@@ -67,7 +67,7 @@ def test_calls_exceeding_limit():
             block_until_released(event, 3),
         )
         with pytest.raises(
-            decoweb.TooManyCalls, match="Too many calls to .*block_until_released.*limit.*2"
+            aiodike.TooManyCalls, match="Too many calls to .*block_until_released.*limit.*2"
         ):
             assert (await tasks) == [1, 2, 3]
 
@@ -77,11 +77,11 @@ def test_calls_exceeding_limit():
 def test_call_with_limit_0():
     """Limit of 0 is allowed to create a "forbidden" call"""
 
-    @decoweb.limit_jobs(limit=0)
+    @aiodike.limit_jobs(limit=0)
     async def f():
         pass
 
-    with pytest.raises(decoweb.TooManyCalls):
+    with pytest.raises(aiodike.TooManyCalls):
         asyncio.run(f())
 
 
@@ -91,7 +91,7 @@ def test_unlogical_limits_give_clear_error(l):
     print(f"{l=}")
     with pytest.raises(ValueError, match=re.escape("Error when wrapping f(). Limit must be >= 0")):
 
-        @decoweb.limit_jobs(limit=l)
+        @aiodike.limit_jobs(limit=l)
         async def f():
             pass
 
@@ -100,6 +100,6 @@ def test_function_instead_coroutine():
     """Ensure that a proper error message is shown when trying to wrap a blocking function"""
     with pytest.raises(ValueError, match="Error when wrapping .+ Only coroutines can be wrapped"):
 
-        @decoweb.limit_jobs(limit=5)
+        @aiodike.limit_jobs(limit=5)
         def f():
             pass

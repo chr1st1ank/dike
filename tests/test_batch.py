@@ -1,6 +1,6 @@
 import asyncio
 from typing import Dict
-import decoweb
+import aiodike
 import pytest
 
 
@@ -9,7 +9,7 @@ async def raise_error(message):
 
 
 def test_single_items_batchsize_reached():
-    @decoweb.batch(target_batch_size=3, max_waiting_time=10)
+    @aiodike.batch(target_batch_size=3, max_waiting_time=10)
     async def f(arg1, arg2):
         assert arg1 == [0, 1, 2]
         assert arg2 == ["a", "b", "c"]
@@ -31,7 +31,7 @@ def test_single_items_batchsize_reached():
 
 
 def test_single_items_kwargs_batchsize_reached():
-    @decoweb.batch(target_batch_size=3, max_waiting_time=10)
+    @aiodike.batch(target_batch_size=3, max_waiting_time=10)
     async def f(arg1, arg2):
         assert arg1 == [0, 1, 2]
         assert arg2 == ["a", "b", "c"]
@@ -53,7 +53,7 @@ def test_single_items_kwargs_batchsize_reached():
 
 
 def test_single_items_timeout():
-    @decoweb.batch(target_batch_size=10, max_waiting_time=0.01)
+    @aiodike.batch(target_batch_size=10, max_waiting_time=0.01)
     async def f(arg1, arg2):
         assert arg1 == [0, 1, 2]
         assert arg2 == ["a", "b", "c"]
@@ -73,7 +73,7 @@ def test_single_items_timeout():
 
 
 def test_multi_batch_size_reached():
-    @decoweb.batch(target_batch_size=5, max_waiting_time=2)
+    @aiodike.batch(target_batch_size=5, max_waiting_time=2)
     async def f(arg1, arg2):
         assert arg1 == [0, 1, 2, 3, 4]
         assert arg2 == ["a", "b", "c", "d", "e"]
@@ -95,7 +95,7 @@ def test_multi_batch_size_reached():
 
 
 def test_multi_args_and_kwargs_batch_size_reached():
-    @decoweb.batch(target_batch_size=5, max_waiting_time=2)
+    @aiodike.batch(target_batch_size=5, max_waiting_time=2)
     async def f(arg1, arg2):
         assert arg1 == [0, 1, 2, 3, 4]
         assert arg2 == ["a", "b", "c", "d", "e"]
@@ -117,7 +117,7 @@ def test_multi_args_and_kwargs_batch_size_reached():
 
 
 def test_multi_item_timeout():
-    @decoweb.batch(target_batch_size=10, max_waiting_time=0.01)
+    @aiodike.batch(target_batch_size=10, max_waiting_time=0.01)
     async def f(arg1, arg2):
         assert arg1 == [0, 1, 2, 3, 4]
         assert arg2 == ["a", "b", "c", "d", "e"]
@@ -139,7 +139,7 @@ def test_multi_item_timeout():
 
 
 def test_items_running_over_batch_size():
-    @decoweb.batch(target_batch_size=5, max_waiting_time=2)
+    @aiodike.batch(target_batch_size=5, max_waiting_time=2)
     async def f(arg1, arg2):
         assert arg1 == [0, 1, 2, 3, 4, 5]
         assert arg2 == ["a", "b", "c", "d", "e", "f"]
@@ -161,7 +161,7 @@ def test_items_running_over_batch_size():
 
 
 def test_upstream_exception_is_propagated():
-    @decoweb.batch(target_batch_size=3, max_waiting_time=10)
+    @aiodike.batch(target_batch_size=3, max_waiting_time=10)
     async def f(arg1, arg2):
         assert arg1 == [0, 1, 2]
         assert arg2 == ["a", "b", "c"]
@@ -185,7 +185,7 @@ def test_concurrent_calculations_do_not_clash():
     n_calls_to_f = 0
     fire_second_call = None
 
-    @decoweb.batch(target_batch_size=3, max_waiting_time=0.1)
+    @aiodike.batch(target_batch_size=3, max_waiting_time=0.1)
     async def f(arg1):
         nonlocal n_calls_to_f
         if n_calls_to_f == 0:
@@ -217,7 +217,7 @@ def test_concurrent_calculations_do_not_clash():
 @pytest.mark.parametrize("batch_size", [0, -1, float("-inf")])
 def test_illegal_batch_size_leads_to_value_error(batch_size):
     with pytest.raises(ValueError):
-        @decoweb.batch(target_batch_size=batch_size, max_waiting_time=1)
+        @aiodike.batch(target_batch_size=batch_size, max_waiting_time=1)
         async def f(arg1):
             pass
 
@@ -225,6 +225,6 @@ def test_illegal_batch_size_leads_to_value_error(batch_size):
 @pytest.mark.parametrize("waiting_time", [0, -1, float("-inf")])
 def test_illegal_waiting_time_leads_to_value_error(waiting_time):
     with pytest.raises(ValueError):
-        @decoweb.batch(target_batch_size=1, max_waiting_time=waiting_time)
+        @aiodike.batch(target_batch_size=1, max_waiting_time=waiting_time)
         async def f(arg1):
             pass

@@ -1,3 +1,4 @@
+"""Decorator library"""
 import asyncio
 import concurrent
 import functools
@@ -28,6 +29,7 @@ def wrap_in_coroutine(func: Callable) -> Callable:
 
 
 class TooManyCalls(Exception):
+    """Error raised by @limit_jobs when a call exceeds the preset limit"""
     pass
 
 
@@ -41,7 +43,7 @@ def limit_jobs(*, limit: int):
         The given coroutine function with added concurrency protection
 
     Raises:
-        TooManyCalls: The decorated function raises a decoweb.ToomanyCalls exception
+        TooManyCalls: The decorated function raises a aiodike.ToomanyCalls exception
             if it is called while already running `limit` times concurrently.
     """
     if not limit >= 0:
@@ -68,15 +70,28 @@ def limit_jobs(*, limit: int):
     return decorator
 
 
-# TODO: Support for some non-batchable arguments to group by
-# def batch(*, batch_args: Iterable[str], target_batch_size: int, max_waiting_time: float):
 def batch(*, target_batch_size: int, max_waiting_time: float):
-    """Calculate in batches.
+    """batch cumulates function calls and batches them.
 
+    Args:
+        target_batch_size: As soon as the collected function arguments reach target_batch_size,
+            the wrapped function is called and the results are returned. Note that the function
+            may also be called with longer arguments than target_batch_size.
+        max_waiting_time: Maximum waiting time before calling the underlying function although
+            the target_batch_size hasn't been reached.
 
-    Assumptions:  # TODO: Add assertions and tests
-        - The return value of the wrapped function is a single iterable
-        - All calls to the underlying function have the same number of positional arguments
+    Raises:
+        ValueError: If the arguments target_batch_size or max_waiting time are not >= 0.
+
+    Returns:
+        A coroutine function which executed the wrapped function with batches of input arguments.
+
+    The wrapped function is called with concatenated arguments of multiple calls.
+
+    Note: 
+    - The return value of the wrapped function is a single iterable
+    - All calls to the underlying function have the same number of positional arguments and
+        keyword arguments
     """
     if not target_batch_size > 0:
         raise ValueError(f"target_batch_size must be > 0, but got {target_batch_size}")
@@ -170,3 +185,9 @@ def batch(*, target_batch_size: int, max_waiting_time: float):
         return batching_call
 
     return decorator
+
+async def exec_async(fn, *args, pool: concurrent.futures.ProcessPoolExecutor=None, max_workers=None):
+    _max_workers = max_workers or 2
+    _pool = pool or concurrent.futures.ProcessPoolExecutor(max_workers=_max_workers)
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(_pool, fn, *args)
