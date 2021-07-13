@@ -1,7 +1,9 @@
+"""Tests for for the decorator dike.batch"""
 import asyncio
-from typing import Dict
-import dike
+
 import pytest
+
+import dike
 
 
 async def raise_error(message):

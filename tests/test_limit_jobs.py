@@ -88,7 +88,6 @@ def test_call_with_limit_0():
 @pytest.mark.parametrize("l", [-1, -1.5, float("-inf")])
 def test_unlogical_limits_give_clear_error(l):
     """Ensure that a proper error message is shown when trying to set strange limits"""
-    print(f"{l=}")
     with pytest.raises(ValueError, match=re.escape("Error when wrapping f(). Limit must be >= 0")):
 
         @dike.limit_jobs(limit=l)

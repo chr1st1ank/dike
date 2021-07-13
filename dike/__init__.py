@@ -3,8 +3,7 @@ import asyncio
 import concurrent
 import functools
 import inspect
-from dataclasses import dataclass
-from typing import Awaitable, Callable, Dict, Iterable, List, Sequence, Tuple, Union
+from typing import Callable, Dict, List, Tuple
 
 
 def wrap_in_coroutine(func: Callable) -> Callable:
@@ -31,8 +30,6 @@ def wrap_in_coroutine(func: Callable) -> Callable:
 class TooManyCalls(Exception):
     """Error raised by @limit_jobs when a call exceeds the preset limit"""
 
-    pass
-
 
 def limit_jobs(*, limit: int):
     """Decorator to limit the number of concurrent calls to a coroutine function.
@@ -46,6 +43,7 @@ def limit_jobs(*, limit: int):
     Raises:
         TooManyCalls: The decorated function raises a dike.ToomanyCalls exception
             if it is called while already running `limit` times concurrently.
+        ValueError: If the decorator is applied to something else than an async def function
 
     Examples:
         >>> import asyncio
@@ -88,7 +86,7 @@ def limit_jobs(*, limit: int):
         async def limited_call(*args, **kwargs):
             nonlocal counter
             if counter == 0:
-                raise TooManyCalls(f"Too many calls to {str(func)}! {limit=}")
+                raise TooManyCalls(f"Too many calls to {str(func)}! limit={limit}")
             try:
                 counter -= 1
                 return await func(*args, **kwargs)
