@@ -217,6 +217,7 @@ def test_concurrent_calculations_do_not_clash():
 @pytest.mark.parametrize("batch_size", [0, -1, float("-inf")])
 def test_illegal_batch_size_leads_to_value_error(batch_size):
     with pytest.raises(ValueError):
+
         @aiodike.batch(target_batch_size=batch_size, max_waiting_time=1)
         async def f(arg1):
             pass
@@ -225,6 +226,7 @@ def test_illegal_batch_size_leads_to_value_error(batch_size):
 @pytest.mark.parametrize("waiting_time", [0, -1, float("-inf")])
 def test_illegal_waiting_time_leads_to_value_error(waiting_time):
     with pytest.raises(ValueError):
+
         @aiodike.batch(target_batch_size=1, max_waiting_time=waiting_time)
         async def f(arg1):
             pass
