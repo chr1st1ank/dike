@@ -1,0 +1,32 @@
+site_name: dike
+repo_url: https://github.com/chr1st1ank/dike
+site_url: https://github.io/chr1st1ank/dike
+repo_name: dike
+nav:
+  - Home: index.md
+  - Installation: installation.md
+#  - Usage: usage.md
+  - API documentation: api.md
+  - History: history.md
+  - Contributing: contributing.md
+theme:
+  name: readthedocs
+  language: en
+  highlightjs: true
+markdown_extensions:
+  - admonition
+  # - toc:
+  #     baselevel: 1
+  #     permalink: true
+  - meta
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.snippets
+plugins:
+  - include-markdown
+  - autorefs
+  - search:
+      lang: en
+  - mkapi:
+      src_dirs:
+        - .
