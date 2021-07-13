@@ -242,12 +242,3 @@ def batch(*, target_batch_size: int, max_waiting_time: float):
         return batching_call
 
     return decorator
-
-
-async def exec_async(
-    fn, *args, pool: concurrent.futures.ProcessPoolExecutor = None, max_workers=None
-):
-    _max_workers = max_workers or 2
-    _pool = pool or concurrent.futures.ProcessPoolExecutor(max_workers=_max_workers)
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(_pool, fn, *args)
