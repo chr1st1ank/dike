@@ -1,7 +1,6 @@
 # Contributing
 
-Contributions are welcome, and they are greatly appreciated! Every little bit
-helps, and credit will always be given.
+Contributions are welcome, and they are greatly appreciated!
 
 You can contribute in many ways:
 
@@ -9,13 +8,13 @@ You can contribute in many ways:
 
 ### Report Bugs
 
-Report bugs at https://github.com/chr1st1ank/dframeio/issues.
+Report bugs at https://github.com/chr1st1ank/aiodike/issues.
 
 If you are reporting a bug, please include:
 
 * Your operating system name and version.
 * Any details about your local setup that might be helpful in troubleshooting.
-* Detailed steps to reproduce the bug.
+* Detailed steps to reproduce the bug, ideally a minimal script which triggers the issue.
 
 ### Fix Bugs
 
@@ -29,13 +28,13 @@ and "help wanted" is open to whoever wants to implement it.
 
 ### Write Documentation
 
-dataframe-io could always use more documentation, whether as part of the
-official dataframe-io docs, in docstrings, or even on the web in blog posts,
+aiodike could always use more documentation, whether as part of the
+official aiodike docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at https://github.com/chr1st1ank/dframeio/issues.
+The best way to send feedback is to file an issue at https://github.com/chr1st1ank/aiodike/issues.
 
 If you are proposing a feature:
 
@@ -46,13 +45,13 @@ If you are proposing a feature:
 
 ## Get Started!
 
-Ready to contribute? Here's how to set up `dframeio` for local development.
+Ready to contribute? Here's how to set up `aiodike` for local development.
 
-1. Fork the `dframeio` repo on GitHub.
+1. Fork the `aiodike` repo on GitHub.
 2. Clone your fork locally
 
 ```
-    $ git clone git@github.com:your_name_here/dframeio.git
+    $ git clone git@github.com:your_name_here/aiodike.git
 ```
 
 3. Ensure [poetry](https://python-poetry.org/docs/) is installed.
@@ -96,7 +95,7 @@ Before you submit a pull request, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in README.md.
 3. The pull request should work for CPython 3.7, 3.8 and 3.9. Check
-   https://github.com/chr1st1ank/dframeio/actions
+   https://github.com/chr1st1ank/aiodike/actions
    and make sure that the tests pass for all supported Python versions.
 
 ## Deploying
@@ -105,8 +104,8 @@ A reminder for the maintainers on how to deploy.
 
 On branch "main":
 - Adjust CHANGELOG.md as described on https://keepachangelog.com
-- Adjust the version number in dframeio/__init__.py
+- Adjust the version number in aiodike/__init__.py
 - Then run `poetry version [major | minor | patch]`
 - Commit and push the changes
-- Create a github release and watch the [release workflow](https://github.com/chr1st1ank/dataframe-io/actions/workflows/release.yml)
+- Create a github release and watch the [release workflow](https://github.com/chr1st1ank/aiodike/actions/workflows/release.yml)
   publishing the documentation and the PyPI package.
