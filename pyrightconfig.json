@@ -10,7 +10,7 @@
     ".vscode",
     "docs",
     "**/__pycache__",
-    "chr1st1ank_decoweb.egg-info"
+    "chr1st1ank_aiodike.egg-info"
   ],
 
   "ignore": [

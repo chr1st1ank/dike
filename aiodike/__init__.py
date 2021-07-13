@@ -4,7 +4,7 @@ import concurrent
 import functools
 import inspect
 from dataclasses import dataclass
-from typing import Callable, List, Sequence, Iterable, Awaitable, Tuple, Union, Dict
+from typing import Awaitable, Callable, Dict, Iterable, List, Sequence, Tuple, Union
 
 
 def wrap_in_coroutine(func: Callable) -> Callable:
@@ -30,6 +30,7 @@ def wrap_in_coroutine(func: Callable) -> Callable:
 
 class TooManyCalls(Exception):
     """Error raised by @limit_jobs when a call exceeds the preset limit"""
+
     pass
 
 
@@ -70,6 +71,8 @@ def limit_jobs(*, limit: int):
     return decorator
 
 
+# Deactivate mccabe's complexity warnings which doesn't like closures
+# flake8: noqa: C901
 def batch(*, target_batch_size: int, max_waiting_time: float):
     """batch cumulates function calls and batches them.
 
@@ -88,7 +91,7 @@ def batch(*, target_batch_size: int, max_waiting_time: float):
 
     The wrapped function is called with concatenated arguments of multiple calls.
 
-    Note: 
+    Note:
     - The return value of the wrapped function is a single iterable
     - All calls to the underlying function have the same number of positional arguments and
         keyword arguments
@@ -186,7 +189,10 @@ def batch(*, target_batch_size: int, max_waiting_time: float):
 
     return decorator
 
-async def exec_async(fn, *args, pool: concurrent.futures.ProcessPoolExecutor=None, max_workers=None):
+
+async def exec_async(
+    fn, *args, pool: concurrent.futures.ProcessPoolExecutor = None, max_workers=None
+):
     _max_workers = max_workers or 2
     _pool = pool or concurrent.futures.ProcessPoolExecutor(max_workers=_max_workers)
     loop = asyncio.get_event_loop()
