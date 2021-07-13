@@ -8,7 +8,7 @@ You can contribute in many ways:
 
 ### Report Bugs
 
-Report bugs at https://github.com/chr1st1ank/aiodike/issues.
+Report bugs at https://github.com/chr1st1ank/dike/issues.
 
 If you are reporting a bug, please include:
 
@@ -28,13 +28,13 @@ and "help wanted" is open to whoever wants to implement it.
 
 ### Write Documentation
 
-aiodike could always use more documentation, whether as part of the
-official aiodike docs, in docstrings, or even on the web in blog posts,
+dike could always use more documentation, whether as part of the
+official dike docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at https://github.com/chr1st1ank/aiodike/issues.
+The best way to send feedback is to file an issue at https://github.com/chr1st1ank/dike/issues.
 
 If you are proposing a feature:
 
@@ -45,13 +45,13 @@ If you are proposing a feature:
 
 ## Get Started!
 
-Ready to contribute? Here's how to set up `aiodike` for local development.
+Ready to contribute? Here's how to set up `dike` for local development.
 
-1. Fork the `aiodike` repo on GitHub.
+1. Fork the `dike` repo on GitHub.
 2. Clone your fork locally
 
 ```
-    $ git clone git@github.com:your_name_here/aiodike.git
+    $ git clone git@github.com:your_name_here/dike.git
 ```
 
 3. Ensure [poetry](https://python-poetry.org/docs/) is installed.
@@ -95,7 +95,7 @@ Before you submit a pull request, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in README.md.
 3. The pull request should work for CPython 3.7, 3.8 and 3.9. Check
-   https://github.com/chr1st1ank/aiodike/actions
+   https://github.com/chr1st1ank/dike/actions
    and make sure that the tests pass for all supported Python versions.
 
 ## Deploying
@@ -104,8 +104,8 @@ A reminder for the maintainers on how to deploy.
 
 On branch "main":
 - Adjust CHANGELOG.md as described on https://keepachangelog.com
-- Adjust the version number in aiodike/__init__.py
+- Adjust the version number in dike/__init__.py
 - Then run `poetry version [major | minor | patch]`
 - Commit and push the changes
-- Create a github release and watch the [release workflow](https://github.com/chr1st1ank/aiodike/actions/workflows/release.yml)
+- Create a github release and watch the [release workflow](https://github.com/chr1st1ank/dike/actions/workflows/release.yml)
   publishing the documentation and the PyPI package.

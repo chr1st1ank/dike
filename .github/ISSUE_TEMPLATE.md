@@ -1,4 +1,4 @@
-* aiodike version:
+* dike version:
 * Python version:
 * Operating System:
 

@@ -1,7 +1,7 @@
-"""Tests for the aiodike.wrap_in_coroutine decorator"""
+"""Tests for the dike.wrap_in_coroutine decorator"""
 import asyncio
 
-from aiodike import wrap_in_coroutine
+from dike import wrap_in_coroutine
 
 
 def test_wrap_function():

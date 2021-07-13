@@ -1,7 +1,7 @@
 # Usage
 
-To use aiodike in a project
+To use dike in a project
 
 ```
-    import aiodike
+    import dike
 ```

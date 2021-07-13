@@ -1,1 +1,1 @@
-"""Unit test package for aiodike."""
+"""Unit test package for dike."""

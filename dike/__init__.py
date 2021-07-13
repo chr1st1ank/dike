@@ -44,8 +44,37 @@ def limit_jobs(*, limit: int):
         The given coroutine function with added concurrency protection
 
     Raises:
-        TooManyCalls: The decorated function raises a aiodike.ToomanyCalls exception
+        TooManyCalls: The decorated function raises a dike.ToomanyCalls exception
             if it is called while already running `limit` times concurrently.
+
+    Examples:
+        >>> import asyncio
+        >>> import httpx
+        >>> import dike
+        ...
+        ...
+        >>> @dike.limit_jobs(limit=2)
+        ... async def web_request():
+        ...     async with httpx.AsyncClient() as client:
+        ...         response = await client.get("https://httpstat.us/200?sleep=100")
+        ...     return response
+        ...
+        ...
+        >>> async def main():
+        ...     responses = await asyncio.gather(
+        ...         web_request(), web_request(), web_request(), return_exceptions=True
+        ...     )
+        ...     for r in responses:
+        ...         if isinstance(r, dike.TooManyCalls):
+        ...             print("too many calls")
+        ...         else:
+        ...             print(r)
+        ...
+        ...
+        >>> asyncio.run(main())
+        <Response [200 OK]>
+        <Response [200 OK]>
+        too many calls
     """
     if not limit >= 0:
         raise ValueError("Error when wrapping f(). Limit must be >= 0!")
@@ -74,7 +103,7 @@ def limit_jobs(*, limit: int):
 # Deactivate mccabe's complexity warnings which doesn't like closures
 # flake8: noqa: C901
 def batch(*, target_batch_size: int, max_waiting_time: float):
-    """batch cumulates function calls and batches them.
+    """@batch is a decorator to cumulate function calls and process them in batches.
 
     Args:
         target_batch_size: As soon as the collected function arguments reach target_batch_size,
@@ -92,9 +121,36 @@ def batch(*, target_batch_size: int, max_waiting_time: float):
     The wrapped function is called with concatenated arguments of multiple calls.
 
     Note:
-    - The return value of the wrapped function is a single iterable
-    - All calls to the underlying function have the same number of positional arguments and
+    - The return value of the wrapped function must be a single iterable
+    - All calls to the underlying function need to have the same number of positional arguments and
         keyword arguments
+
+    Example:
+        >>> import asyncio
+        >>> import dike
+        ...
+        ...
+        >>> @dike.batch(target_batch_size=3, max_waiting_time=10)
+        ... async def f(arg1, arg2):
+        ...     print(f"arg1: {arg1}")
+        ...     print(f"arg2: {arg2}")
+        ...     return [10, 11, 12]
+        ...
+        ...
+        >>> async def main():
+        ...     result = await asyncio.gather(
+        ...         f([0], ["a"]),
+        ...         f([1], ["b"]),
+        ...         f([2], ["c"]),
+        ...     )
+        ...
+        ...     print(f"Result: {result}")
+        ...
+        ...
+        >>> asyncio.run(main())
+        arg1: [0, 1, 2]
+        arg2: ['a', 'b', 'c']
+        Result: [[10], [11], [12]]
     """
     if not target_batch_size > 0:
         raise ValueError(f"target_batch_size must be > 0, but got {target_batch_size}")
