@@ -1,29 +1,25 @@
-# decoweb - Decorator library for web services
+# aiodike - Python asyncio tools for web service resilience
 
-[<img src="https://img.shields.io/pypi/v/decoweb.svg" alt="Release Status">](https://pypi.python.org/pypi/decoweb)
-[<img src="https://github.com/chr1st1ank/dataframe-io/actions/workflows/test.yml/badge.svg?branch=main" alt="CI Status">](https://github.com/chr1st1ank/decoweb/actions)
-[![codecov](https://codecov.io/gh/chr1st1ank/decoweb/branch/main/graph/badge.svg?token=4oBkRHXbfa)](https://codecov.io/gh/chr1st1ank/decoweb)
+[<img src="https://img.shields.io/pypi/v/aiodike.svg" alt="Release Status">](https://pypi.python.org/pypi/aiodike)
+[<img src="https://github.com/chr1st1ank/aiodike/actions/workflows/test.yml/badge.svg?branch=main" alt="CI Status">](https://github.com/chr1st1ank/aiodike/actions)
+[![codecov](https://codecov.io/gh/chr1st1ank/aiodike/branch/main/graph/badge.svg?token=4oBkRHXbfa)](https://codecov.io/gh/chr1st1ank/aiodike)
 
 
-* Documentation: <https://chr1st1ank.github.io/decoweb/>
+* Documentation: <https://chr1st1ank.github.io/aiodike/>
 * License: Apache-2.0
 * Status: Initial development
 
 ## Features
 
-tbd
+### Concurrency limiting for asynchronous functions
+The `@limit_jobs` decorator allows to limit the number of concurrent excecutions of a coroutine 
+function.
+
+### Mini-batching for asynchronous function calls
+The `@batch` decorator groups function calls into batches and only calls the wrapped function 
+once on the collected input.
 
 ## Installation
 ```
-pip install dframeio
-
-# Including pyarrow to read/write parquet files:
-pip install dframeio[pyarrow]
-```
-
-Show installed backends:
-```
->>> import dframeio
->>> dframeio.backends
-[<class 'dframeio.parquet.ParquetBackend'>]
+pip install aiodike
 ```
