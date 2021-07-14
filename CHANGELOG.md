@@ -3,6 +3,7 @@
 ## Unreleased
 Added:
 * Propagation of function exceptions to all callers for the @batch decorator
+* A dockerized example service using minibatching and load shedding
 
 Fixed:
 * Occasional Python 3.8 f-strings were replaced by a Python 3.7 compatible implementation
