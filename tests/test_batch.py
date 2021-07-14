@@ -1,5 +1,6 @@
 """Tests for for the decorator dike.batch"""
 import asyncio
+import random
 
 import pytest
 
@@ -184,34 +185,24 @@ def test_upstream_exception_is_propagated():
 
 
 def test_concurrent_calculations_do_not_clash():
-    n_calls_to_f = 0
-    fire_second_call = None
+    """Run many calculations in parallel and see if the results are always correct"""
 
-    @dike.batch(target_batch_size=3, max_waiting_time=0.1)
-    async def f(arg1):
-        nonlocal n_calls_to_f
-        if n_calls_to_f == 0:
-            n_calls_to_f += 1
-            assert arg1 == [1, 2, 3]
-            await fire_second_call.wait()
-            return [11, 12, 13]
+    @dike.batch(target_batch_size=3, max_waiting_time=0.01)
+    async def f(arg):
+        print("Batch size", len(arg))
+        await asyncio.sleep(random.random() / 100.0)
+        return [x * 2 for x in arg]
 
-        assert arg1 == [4, 5, 6]
-        return [14, 15, 16]
+    async def do_n_calculations(n):
+        for _ in range(n):
+            number = random.randint(0, 2 ** 20)
+            result = await (f([number]))
+            assert result[0] == number * 2
+
+            await asyncio.sleep(random.random() / 10.0)
 
     async def run_test():
-        nonlocal fire_second_call
-        fire_second_call = asyncio.Event()
-
-        task_1 = asyncio.create_task(f([1, 2, 3]))
-        task_2 = asyncio.create_task(f([4, 5, 6]))
-        await asyncio.sleep(0.01)
-        fire_second_call.set()
-
-        await task_1
-        assert task_1.result() == [11, 12, 13]
-        await task_1
-        assert task_2.result() == [14, 15, 16]
+        await asyncio.gather(*[do_n_calculations(20) for _ in range(5)])
 
     asyncio.run(run_test())
 

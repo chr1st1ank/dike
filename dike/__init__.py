@@ -100,7 +100,7 @@ def limit_jobs(*, limit: int):
 
 # Deactivate mccabe's complexity warnings which doesn't like closures
 # flake8: noqa: C901
-def batch(*, target_batch_size: int, max_waiting_time: float):
+def batch(*, target_batch_size: int, max_waiting_time: float, max_processing_time: float = 10.0):
     """@batch is a decorator to cumulate function calls and process them in batches.
 
     Args:
@@ -109,9 +109,15 @@ def batch(*, target_batch_size: int, max_waiting_time: float):
             may also be called with longer arguments than target_batch_size.
         max_waiting_time: Maximum waiting time before calling the underlying function although
             the target_batch_size hasn't been reached.
+        max_processing_time: Maximum time for the processing itself (without waiting) before an
+            asyncio.TimeoutError is raised. Note: It is strongly advised to set a reasonably
+            strict timeout here in order not to create starving tasks which never finish in case
+            something is wrong with the backend call.
 
     Raises:
         ValueError: If the arguments target_batch_size or max_waiting time are not >= 0.
+        asyncio.TimeoutError: Is raised when calling the wrapped function takes longer than
+            max_processing_time
 
     Returns:
         A coroutine function which executed the wrapped function with batches of input arguments.
@@ -198,10 +204,16 @@ def batch(*, target_batch_size: int, max_waiting_time: float):
                 await calculate(batch_no_to_calculate)
             else:
                 try:
-                    await asyncio.wait_for(result_events[batch_no].wait(), timeout=max_waiting_time)
+                    await asyncio.wait_for(
+                        result_events[batch_no_to_calculate].wait(), timeout=max_waiting_time
+                    )
                 except asyncio.TimeoutError:
                     if batch_no == batch_no_to_calculate:
                         await calculate(batch_no_to_calculate)
+                    else:
+                        await asyncio.wait_for(
+                            result_events[batch_no_to_calculate].wait(), timeout=max_processing_time
+                        )
 
         async def calculate(batch_no_to_calculate):
             nonlocal results, queue, results_ready
