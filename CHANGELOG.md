@@ -1,6 +1,9 @@
 # History
 
 ## Unreleased
+Added:
+* Propagation of function exceptions to all callers for the @batch decorator
+
 Fixed:
 * Occasional Python 3.8 f-strings were replaced by a Python 3.7 compatible implementation
 * A race condition was fixed that occurred in case of multiple concurrent calls running into the

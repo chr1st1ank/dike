@@ -3,7 +3,7 @@ import asyncio
 import concurrent
 import functools
 import inspect
-from typing import Callable, Dict, List, Tuple
+from typing import Callable, Dict, List, Tuple, Union
 
 
 def wrap_in_coroutine(func: Callable) -> Callable:
@@ -166,7 +166,7 @@ def batch(*, target_batch_size: int, max_waiting_time: float, max_processing_tim
         queue: List[Tuple[List, Dict]] = []
         n_rows_in_queue: int = 0
         result_events: Dict[int, asyncio.Event] = {}
-        results: Dict[int, List] = {}
+        results: Dict[int, Union[Exception, List]] = {}
         results_ready: Dict[int, int] = {}
 
         @functools.wraps(func)
@@ -220,9 +220,13 @@ def batch(*, target_batch_size: int, max_waiting_time: float, max_processing_tim
             if batch_no == batch_no_to_calculate:
                 n_results = len(queue)
                 args, kwargs = pop_args_from_queue()
-                results[batch_no_to_calculate] = await func(*args, **kwargs)
-                result_events[batch_no_to_calculate].set()
+                try:
+                    results[batch_no_to_calculate] = await func(*args, **kwargs)
+                except Exception as e:
+                    results[batch_no_to_calculate] = e
                 results_ready[batch_no_to_calculate] = n_results
+                result_events[batch_no_to_calculate].set()
+
 
         def pop_args_from_queue():
             nonlocal batch_no, queue, n_rows_in_queue
@@ -241,15 +245,24 @@ def batch(*, target_batch_size: int, max_waiting_time: float, max_processing_tim
             return args, kwargs
 
         def get_results(start_index: int, stop_index: int, batch_no):
+            nonlocal results
+
+            if isinstance(results[batch_no], Exception):
+                exc = results[batch_no]
+                remove_result(batch_no)
+                raise exc
+            results_to_return = results[batch_no][start_index:stop_index]
+            remove_result(batch_no)
+            return results_to_return
+
+        def remove_result(batch_no):
             nonlocal results_ready, result_events, results
 
-            results_to_return = results[batch_no][start_index:stop_index]
             results_ready[batch_no] -= 1
             if results_ready[batch_no] == 0:
                 del result_events[batch_no]
                 del results[batch_no]
                 del results_ready[batch_no]
-            return results_to_return
 
         return batching_call
 

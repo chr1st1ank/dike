@@ -184,6 +184,30 @@ def test_upstream_exception_is_propagated():
     asyncio.run(run_test())
 
 
+def test_upstream_exception_is_propagated_to_all_callers():
+    @dike.batch(target_batch_size=3, max_waiting_time=10)
+    async def f(arg1, arg2):
+        assert arg1 == [0, 1, 2]
+        assert arg2 == ["a", "b", "c"]
+        raise RuntimeError("Upstream exception")
+
+    async def run_test():
+        results = await asyncio.wait_for(
+            asyncio.gather(
+                f([0], ["a"]),
+                f([1], ["b"]),
+                f([2], ["c"]),
+                return_exceptions=True
+            ),
+            timeout=1.0,
+        )
+        for r in results:
+            assert isinstance(r, Exception)
+            # assert str(r) == "Upstream exception"
+
+    asyncio.run(run_test())
+
+
 def test_concurrent_calculations_do_not_clash():
     """Run many calculations in parallel and see if the results are always correct"""
 
