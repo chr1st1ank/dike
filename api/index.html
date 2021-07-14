@@ -201,7 +201,7 @@ if it is called while already running <code>limit</code> times concurrently.</sp
 <div class='mkapi-object-container'>
   <div class="mkapi-object function code top">
     <div class="mkapi-object-kind function top">function</div>
-    <div class="mkapi-object-body function top"><code class="mkapi-object-name">batch</code><code class="mkapi-object-parenthesis">(</code><code class="mkapi-object-signature">target_batch_size</code>, <code class="mkapi-object-signature">max_waiting_time</code><code class="mkapi-object-parenthesis">)</code></div>
+    <div class="mkapi-object-body function top"><code class="mkapi-object-name">batch</code><code class="mkapi-object-parenthesis">(</code><code class="mkapi-object-signature">target_batch_size</code>, <code class="mkapi-object-signature">max_waiting_time</code>, <code class="mkapi-object-signature">max_processing_time=10.0</code><code class="mkapi-object-parenthesis">)</code></div>
   </div>
   
 </div>
@@ -225,6 +225,13 @@ may also be called with longer arguments than target_batch_size.</span></li>
 <span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">Maximum waiting time before calling the underlying function although
 the target_batch_size hasn't been reached.</span></li>
 
+<li><code class="mkapi-item-name">max_processing_time</code>
+<span class="mkapi-item-type">(float, optional)</span>
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">Maximum time for the processing itself (without waiting) before an
+asyncio.TimeoutError is raised. Note: It is strongly advised to set a reasonably
+strict timeout here in order not to create starving tasks which never finish in case
+something is wrong with the backend call.</span></li>
+
 
 </ul></div>
     </div>
@@ -236,6 +243,11 @@ the target_batch_size hasn't been reached.</span></li>
 <li><code class="mkapi-item-name">ValueError</code>
 
 <span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">If the arguments target_batch_size or max_waiting time are not &gt;= 0.</span></li>
+
+<li><code class="mkapi-item-name">asyncio.TimeoutError</code>
+
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">Is raised when calling the wrapped function takes longer than
+max_processing_time</span></li>
 
 
 </ul></div>
