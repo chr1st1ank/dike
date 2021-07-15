@@ -1,6 +1,9 @@
 # History
 
 ## Unreleased
+
+
+## 0.3.0 (2021-07-15)
 Added:
 * Support for numpy arrays in the @batch decorator
 
