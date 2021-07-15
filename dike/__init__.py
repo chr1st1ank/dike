@@ -196,7 +196,7 @@ def batch(
         raise ValueError(
             f'Invalid argument_type "{argument_type}". Must be one of "string", "numpy"'
         )
-    elif argument_type == "numpy" and np is None:
+    if argument_type == "numpy" and np is None:
         raise ValueError('Unable to use "numpy" as argument_type because numpy is not available')
 
     def decorator(func):
@@ -264,7 +264,7 @@ def batch(
                 args, kwargs = pop_args_from_queue()
                 try:
                     results[batch_no_to_calculate] = await func(*args, **kwargs)
-                except Exception as e:
+                except Exception as e:  # pylint: disable=broad-except
                     results[batch_no_to_calculate] = e
                 results_ready[batch_no_to_calculate] = n_results
                 result_events[batch_no_to_calculate].set()

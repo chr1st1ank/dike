@@ -35,7 +35,7 @@ def test_single_items_batchsize_reached(argtype_converter, arg_type_name):
             timeout=1.0,
         )
 
-        assert all([isinstance(r, type(argtype_converter([]))) for r in result])
+        assert all(isinstance(r, type(argtype_converter([]))) for r in result)
         assert list(map(list, result)) == [[10], [11], [12]]
 
     asyncio.run(run_test())
@@ -59,7 +59,7 @@ def test_single_items_kwargs_batchsize_reached(argtype_converter, arg_type_name)
             timeout=1.0,
         )
 
-        assert all([isinstance(r, type(argtype_converter([]))) for r in result])
+        assert all(isinstance(r, type(argtype_converter([]))) for r in result)
         assert list(map(list, result)) == [[10], [11], [12]]
 
     asyncio.run(run_test())
@@ -86,7 +86,7 @@ def test_single_items_mixed_kwargs_raises_value_error(argtype_converter, arg_typ
             timeout=1.0,
         )
 
-        assert all([isinstance(r, type(argtype_converter([]))) for r in result[:2]])
+        assert all(isinstance(r, type(argtype_converter([]))) for r in result[:2])
         assert list(result[0]) == [10]
         assert list(result[1]) == [11]
         assert exceptions_equal(
@@ -277,7 +277,7 @@ def test_illegal_batch_size_leads_to_value_error(batch_size):
     with pytest.raises(ValueError):
 
         @dike.batch(target_batch_size=batch_size, max_waiting_time=1)
-        async def f(arg1):
+        async def f(_):
             pass
 
 
@@ -286,5 +286,5 @@ def test_illegal_waiting_time_leads_to_value_error(waiting_time):
     with pytest.raises(ValueError):
 
         @dike.batch(target_batch_size=1, max_waiting_time=waiting_time)
-        async def f(arg1):
+        async def f(_):
             pass
