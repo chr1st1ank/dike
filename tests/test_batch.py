@@ -2,55 +2,100 @@
 import asyncio
 import random
 
+import numpy as np
 import pytest
 
 import dike
+
+
+def exceptions_equal(exception1, exception2):
+    """Returns True if the exceptions have the same type and message"""
+    return type(exception1) == type(exception2) and str(exception1) == str(exception2)
 
 
 async def raise_error(message):
     raise RuntimeError(message)
 
 
-def test_single_items_batchsize_reached():
+@pytest.mark.parametrize("argument_type", [list, np.array])
+def test_single_items_batchsize_reached(argument_type):
     @dike.batch(target_batch_size=3, max_waiting_time=10)
     async def f(arg1, arg2):
-        assert arg1 == [0, 1, 2]
-        assert arg2 == ["a", "b", "c"]
-        return [10, 11, 12]
+        assert arg1 == argument_type([0, 1, 2])
+        assert arg2 == argument_type(["a", "b", "c"])
+        return argument_type([10, 11, 12])
 
     async def run_test():
         result = await asyncio.wait_for(
             asyncio.gather(
-                f([0], ["a"]),
-                f([1], ["b"]),
-                f([2], ["c"]),
+                f(argument_type([0]), argument_type(["a"])),
+                f(argument_type([1]), argument_type(["b"])),
+                f(argument_type([2]), argument_type(["c"])),
             ),
             timeout=1.0,
         )
 
-        assert result == [[10], [11], [12]]
+        assert result == [argument_type([10]), argument_type([11]), argument_type([12])]
 
     asyncio.run(run_test())
 
 
-def test_single_items_kwargs_batchsize_reached():
+@pytest.mark.parametrize("argument_type", [list, np.array])
+def test_single_items_kwargs_batchsize_reached(argument_type):
     @dike.batch(target_batch_size=3, max_waiting_time=10)
     async def f(arg1, arg2):
-        assert arg1 == [0, 1, 2]
-        assert arg2 == ["a", "b", "c"]
-        return [10, 11, 12]
+        assert arg1 == argument_type([0, 1, 2])
+        assert arg2 == argument_type(["a", "b", "c"])
+        return argument_type([10, 11, 12])
 
     async def run_test():
         result = await asyncio.wait_for(
             asyncio.gather(
-                f(arg1=[0], arg2=["a"]),
-                f(arg1=[1], arg2=["b"]),
-                f(arg2=["c"], arg1=[2]),
+                f(arg2=argument_type(["a"]), arg1=argument_type([0])),
+                f(arg2=argument_type(["b"]), arg1=argument_type([1])),
+                f(arg1=argument_type([2]), arg2=argument_type(["c"])),
+                # f(arg2=argument_type(["c"]), arg1=argument_type([2])),
             ),
             timeout=1.0,
         )
 
-        assert result == [[10], [11], [12]]
+        assert result == [argument_type([10]), argument_type([11]), argument_type([12])]
+
+    asyncio.run(run_test())
+
+
+@pytest.mark.parametrize("argument_type", [list, np.array])
+def test_single_items_mixed_kwargs_raises_value_error(argument_type):
+    @dike.batch(target_batch_size=3, max_waiting_time=0.01)
+    async def f(arg1, arg2):
+        assert arg1 == argument_type([0, 1])
+        assert arg2 == argument_type(["a", "b"])
+        return argument_type([10, 11])
+
+    async def run_test():
+        result = await asyncio.wait_for(
+            asyncio.gather(
+                f(argument_type([0]), argument_type(["a"])),
+                f(argument_type([1]), argument_type(["b"])),
+                f(arg2=argument_type(["c"]), arg1=argument_type([2])),
+                f(argument_type([1])),
+                f(argument_type([]), argument_type([])),
+                return_exceptions=True
+            ),
+            timeout=1.0,
+        )
+
+        assert result[0] == argument_type([10])
+        assert result[1] == argument_type([11])
+        assert exceptions_equal(
+            result[2], ValueError("Inconsistent use of positional and keyword arguments")
+        )
+        assert exceptions_equal(
+            result[3], ValueError("Inconsistent use of positional and keyword arguments")
+        )
+        assert exceptions_equal(
+            result[4], ValueError("Function called with empty collections as arguments")
+        )
 
     asyncio.run(run_test())
 
@@ -193,12 +238,7 @@ def test_upstream_exception_is_propagated_to_all_callers():
 
     async def run_test():
         results = await asyncio.wait_for(
-            asyncio.gather(
-                f([0], ["a"]),
-                f([1], ["b"]),
-                f([2], ["c"]),
-                return_exceptions=True
-            ),
+            asyncio.gather(f([0], ["a"]), f([1], ["b"]), f([2], ["c"]), return_exceptions=True),
             timeout=1.0,
         )
         for r in results:

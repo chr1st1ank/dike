@@ -106,7 +106,13 @@ def limit_jobs(*, limit: int):
 
 # Deactivate mccabe's complexity warnings which doesn't like closures
 # flake8: noqa: C901
-def batch(*, target_batch_size: int, max_waiting_time: float, max_processing_time: float = 10.0):
+def batch(
+    *,
+    target_batch_size: int,
+    max_waiting_time: float,
+    max_processing_time: float = 10.0,
+    argument_type: str = "list",
+):
     """@batch is a decorator to cumulate function calls and process them in batches.
         Not thread-safe.
 
@@ -114,15 +120,21 @@ def batch(*, target_batch_size: int, max_waiting_time: float, max_processing_tim
         target_batch_size: As soon as the collected function arguments reach target_batch_size,
             the wrapped function is called and the results are returned. Note that the function
             may also be called with longer arguments than target_batch_size.
-        max_waiting_time: Maximum waiting time before calling the underlying function although
-            the target_batch_size hasn't been reached.
-        max_processing_time: Maximum time for the processing itself (without waiting) before an
-            asyncio.TimeoutError is raised. Note: It is strongly advised to set a reasonably
-            strict timeout here in order not to create starving tasks which never finish in case
-            something is wrong with the backend call.
+        max_waiting_time: Maximum waiting time in seconds before calling the underlying function
+            although the target_batch_size hasn't been reached.
+        max_processing_time: Maximum time in seconds for the processing itself (without waiting)
+            before an asyncio.TimeoutError is raised. Note: It is strongly advised to set a
+            reasonably strict timeout here in order not to create starving tasks which never finish
+            in case something is wrong with the backend call.
+        argument_type: The type of function argument used for batching. One of "list" or "numpy".
+            Per default "list" is used, i.e. it is assumed that the input arguments to the
+            wrapped functions are lists which can be concatenated. If set to "numpy" the arguments
+            are assumed to be numpy arrays which can be concatenated by numpy.concatenate()
+            along axis 0.
 
     Raises:
         ValueError: If the arguments target_batch_size or max_waiting time are not >= 0.
+        ValueError: When calling the function with incorrect or inconsistent arguments.
         asyncio.TimeoutError: Is raised when calling the wrapped function takes longer than
             max_processing_time
 
@@ -137,7 +149,9 @@ def batch(*, target_batch_size: int, max_waiting_time: float, max_processing_tim
         function in order to avoid race conditions.
     - The return value of the wrapped function must be a single iterable.
     - All calls to the underlying function need to have the same number of positional arguments and
-        the same keyword arguments.
+        the same keyword arguments. It also isn't possible to mix the two ways to pass an argument.
+        The same argument always has to be passed either as keyword argument or as positional
+        argument.
 
     Example:
         >>> import asyncio
@@ -197,16 +211,20 @@ def batch(*, target_batch_size: int, max_waiting_time: float, max_processing_tim
             """Add a new argument vector to the queue and return result indices"""
             nonlocal queue, n_rows_in_queue
 
-            queue.append((args, kwargs))
-            offset = n_rows_in_queue
+            if queue and (len(args) != len(queue[0][0]) or kwargs.keys() != queue[0][1].keys()):
+                raise ValueError("Inconsistent use of positional and keyword arguments")
+            n_rows_call = 0
             if args:
-                n_rows_in_queue += len(args[0])
+                n_rows_call = len(args[0])
             elif kwargs:
                 for v in kwargs.values():
-                    n_rows_in_queue += len(v)
-                    break
-            else:
+                    n_rows_call = len(v)
+                    break  # We only need one arbitrary keyword argument
+            if n_rows_call == 0:
                 raise ValueError("Function called with empty collections as arguments")
+            queue.append((args, kwargs))
+            offset = n_rows_in_queue
+            n_rows_in_queue += n_rows_call
             return offset, n_rows_in_queue
 
         async def wait_for_calculation(batch_no_to_calculate):
@@ -236,7 +254,6 @@ def batch(*, target_batch_size: int, max_waiting_time: float, max_processing_tim
                     results[batch_no_to_calculate] = e
                 results_ready[batch_no_to_calculate] = n_results
                 result_events[batch_no_to_calculate].set()
-
 
         def pop_args_from_queue():
             nonlocal batch_no, queue, n_rows_in_queue
