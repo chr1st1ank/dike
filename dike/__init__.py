@@ -1,9 +1,13 @@
 """Decorator library"""
 import asyncio
-import concurrent
 import functools
 import inspect
 from typing import Callable, Dict, List, Tuple, Union
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 
 def wrap_in_coroutine(func: Callable) -> Callable:
@@ -32,8 +36,7 @@ class TooManyCalls(Exception):
 
 
 def limit_jobs(*, limit: int):
-    """Decorator to limit the number of concurrent calls to a coroutine function.
-        Not thread-safe.
+    """Decorator to limit the number of concurrent calls to a coroutine function. Not thread-safe.
 
     Args:
         limit: The maximum number of ongoing calls allowed at any time
@@ -116,6 +119,10 @@ def batch(
     """@batch is a decorator to cumulate function calls and process them in batches.
         Not thread-safe.
 
+    The function to wrap must have arguments of type list or numpy.array which can be aggregated.
+    It must return just a single value of the same type. The type has to be specified with the
+    `argument_type` parameter of the decorator.
+
     Args:
         target_batch_size: As soon as the collected function arguments reach target_batch_size,
             the wrapped function is called and the results are returned. Note that the function
@@ -133,7 +140,8 @@ def batch(
             along axis 0.
 
     Raises:
-        ValueError: If the arguments target_batch_size or max_waiting time are not >= 0.
+        ValueError: If the arguments target_batch_size or max_waiting time are not >= 0 or if the
+            argument_type is invalid.
         ValueError: When calling the function with incorrect or inconsistent arguments.
         asyncio.TimeoutError: Is raised when calling the wrapped function takes longer than
             max_processing_time
@@ -184,6 +192,12 @@ def batch(
         raise ValueError(f"target_batch_size must be > 0, but got {target_batch_size}")
     if not max_waiting_time > 0:
         raise ValueError(f"max_waiting_time must be > 0, but got {max_waiting_time}")
+    if argument_type not in {"list", "numpy"}:
+        raise ValueError(
+            f'Invalid argument_type "{argument_type}". Must be one of "string", "numpy"'
+        )
+    elif argument_type == "numpy" and np is None:
+        raise ValueError('Unable to use "numpy" as argument_type because numpy is not available')
 
     def decorator(func):
         batch_no: int = 0
@@ -261,10 +275,16 @@ def batch(
             n_args = len(queue[0][0])
             args = []
             for j in range(n_args):
-                args.append([element for call_args, _ in queue for element in call_args[j]])
+                if argument_type == "list":
+                    args.append([element for call_args, _ in queue for element in call_args[j]])
+                elif argument_type == "numpy":
+                    args.append(np.concatenate([call_args[j] for call_args, _ in queue]))
             kwargs = {}
             for k in queue[0][1].keys():
-                kwargs[k] = [element for _, call_kwargs in queue for element in call_kwargs[k]]
+                if argument_type == "list":
+                    kwargs[k] = [element for _, call_kwargs in queue for element in call_kwargs[k]]
+                elif argument_type == "numpy":
+                    kwargs[k] = np.concatenate([call_kwargs[k] for _, call_kwargs in queue])
 
             queue = []
             n_rows_in_queue = 0

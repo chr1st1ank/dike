@@ -17,76 +17,78 @@ async def raise_error(message):
     raise RuntimeError(message)
 
 
-@pytest.mark.parametrize("argument_type", [list, np.array])
-def test_single_items_batchsize_reached(argument_type):
-    @dike.batch(target_batch_size=3, max_waiting_time=10)
+@pytest.mark.parametrize("argtype_converter, arg_type_name", [(list, "list"), (np.array, "numpy")])
+def test_single_items_batchsize_reached(argtype_converter, arg_type_name):
+    @dike.batch(target_batch_size=3, max_waiting_time=10, argument_type=arg_type_name)
     async def f(arg1, arg2):
-        assert arg1 == argument_type([0, 1, 2])
-        assert arg2 == argument_type(["a", "b", "c"])
-        return argument_type([10, 11, 12])
+        assert list(arg1) == [0, 1, 2]
+        assert list(arg2) == ["a", "b", "c"]
+        return argtype_converter([10, 11, 12])
 
     async def run_test():
         result = await asyncio.wait_for(
             asyncio.gather(
-                f(argument_type([0]), argument_type(["a"])),
-                f(argument_type([1]), argument_type(["b"])),
-                f(argument_type([2]), argument_type(["c"])),
+                f(argtype_converter([0]), argtype_converter(["a"])),
+                f(argtype_converter([1]), argtype_converter(["b"])),
+                f(argtype_converter([2]), argtype_converter(["c"])),
             ),
             timeout=1.0,
         )
 
-        assert result == [argument_type([10]), argument_type([11]), argument_type([12])]
+        assert all([isinstance(r, type(argtype_converter([]))) for r in result])
+        assert list(map(list, result)) == [[10], [11], [12]]
 
     asyncio.run(run_test())
 
 
-@pytest.mark.parametrize("argument_type", [list, np.array])
-def test_single_items_kwargs_batchsize_reached(argument_type):
-    @dike.batch(target_batch_size=3, max_waiting_time=10)
+@pytest.mark.parametrize("argtype_converter, arg_type_name", [(list, "list"), (np.array, "numpy")])
+def test_single_items_kwargs_batchsize_reached(argtype_converter, arg_type_name):
+    @dike.batch(target_batch_size=3, max_waiting_time=10, argument_type=arg_type_name)
     async def f(arg1, arg2):
-        assert arg1 == argument_type([0, 1, 2])
-        assert arg2 == argument_type(["a", "b", "c"])
-        return argument_type([10, 11, 12])
+        assert list(arg1) == [0, 1, 2]
+        assert list(arg2) == ["a", "b", "c"]
+        return argtype_converter([10, 11, 12])
 
     async def run_test():
         result = await asyncio.wait_for(
             asyncio.gather(
-                f(arg2=argument_type(["a"]), arg1=argument_type([0])),
-                f(arg2=argument_type(["b"]), arg1=argument_type([1])),
-                f(arg1=argument_type([2]), arg2=argument_type(["c"])),
-                # f(arg2=argument_type(["c"]), arg1=argument_type([2])),
+                f(arg2=argtype_converter(["a"]), arg1=argtype_converter([0])),
+                f(arg2=argtype_converter(["b"]), arg1=argtype_converter([1])),
+                f(arg1=argtype_converter([2]), arg2=argtype_converter(["c"])),
             ),
             timeout=1.0,
         )
 
-        assert result == [argument_type([10]), argument_type([11]), argument_type([12])]
+        assert all([isinstance(r, type(argtype_converter([]))) for r in result])
+        assert list(map(list, result)) == [[10], [11], [12]]
 
     asyncio.run(run_test())
 
 
-@pytest.mark.parametrize("argument_type", [list, np.array])
-def test_single_items_mixed_kwargs_raises_value_error(argument_type):
-    @dike.batch(target_batch_size=3, max_waiting_time=0.01)
+@pytest.mark.parametrize("argtype_converter, arg_type_name", [(list, "list"), (np.array, "numpy")])
+def test_single_items_mixed_kwargs_raises_value_error(argtype_converter, arg_type_name):
+    @dike.batch(target_batch_size=3, max_waiting_time=0.01, argument_type=arg_type_name)
     async def f(arg1, arg2):
-        assert arg1 == argument_type([0, 1])
-        assert arg2 == argument_type(["a", "b"])
-        return argument_type([10, 11])
+        assert list(arg1) == [0, 1]
+        assert list(arg2) == ["a", "b"]
+        return argtype_converter([10, 11])
 
     async def run_test():
         result = await asyncio.wait_for(
             asyncio.gather(
-                f(argument_type([0]), argument_type(["a"])),
-                f(argument_type([1]), argument_type(["b"])),
-                f(arg2=argument_type(["c"]), arg1=argument_type([2])),
-                f(argument_type([1])),
-                f(argument_type([]), argument_type([])),
-                return_exceptions=True
+                f(argtype_converter([0]), argtype_converter(["a"])),
+                f(argtype_converter([1]), argtype_converter(["b"])),
+                f(arg2=argtype_converter(["c"]), arg1=argtype_converter([2])),
+                f(argtype_converter([1])),
+                f(argtype_converter([]), argtype_converter([])),
+                return_exceptions=True,
             ),
             timeout=1.0,
         )
 
-        assert result[0] == argument_type([10])
-        assert result[1] == argument_type([11])
+        assert all([isinstance(r, type(argtype_converter([]))) for r in result[:2]])
+        assert list(result[0]) == [10]
+        assert list(result[1]) == [11]
         assert exceptions_equal(
             result[2], ValueError("Inconsistent use of positional and keyword arguments")
         )
@@ -253,7 +255,6 @@ def test_concurrent_calculations_do_not_clash():
 
     @dike.batch(target_batch_size=3, max_waiting_time=0.01)
     async def f(arg):
-        print("Batch size", len(arg))
         await asyncio.sleep(random.random() / 100.0)
         return [x * 2 for x in arg]
 
