@@ -33,6 +33,7 @@ class TooManyCalls(Exception):
 
 def limit_jobs(*, limit: int):
     """Decorator to limit the number of concurrent calls to a coroutine function.
+        Not thread-safe.
 
     Args:
         limit: The maximum number of ongoing calls allowed at any time
@@ -44,6 +45,11 @@ def limit_jobs(*, limit: int):
         TooManyCalls: The decorated function raises a dike.ToomanyCalls exception
             if it is called while already running `limit` times concurrently.
         ValueError: If the decorator is applied to something else than an async def function
+
+    Note:
+        The decorator is not thread-safe, but only allows for concurrent access by async functions.
+        The wrapped function may use multithreading, but only one thread at a time may call the
+        function in order to avoid race conditions.
 
     Examples:
         >>> import asyncio
@@ -102,6 +108,7 @@ def limit_jobs(*, limit: int):
 # flake8: noqa: C901
 def batch(*, target_batch_size: int, max_waiting_time: float, max_processing_time: float = 10.0):
     """@batch is a decorator to cumulate function calls and process them in batches.
+        Not thread-safe.
 
     Args:
         target_batch_size: As soon as the collected function arguments reach target_batch_size,
@@ -124,10 +131,13 @@ def batch(*, target_batch_size: int, max_waiting_time: float, max_processing_tim
 
     The wrapped function is called with concatenated arguments of multiple calls.
 
-    Note:
-    - The return value of the wrapped function must be a single iterable
+    Notes:
+    - The decorator is not thread-safe, but only allows for concurrent access by async functions.
+        The wrapped function may use multithreading, but only one thread at a time may call the
+        function in order to avoid race conditions.
+    - The return value of the wrapped function must be a single iterable.
     - All calls to the underlying function need to have the same number of positional arguments and
-        keyword arguments
+        the same keyword arguments.
 
     Example:
         >>> import asyncio

@@ -202,8 +202,8 @@ def test_upstream_exception_is_propagated_to_all_callers():
             timeout=1.0,
         )
         for r in results:
-            assert isinstance(r, Exception)
-            # assert str(r) == "Upstream exception"
+            assert isinstance(r, RuntimeError)
+            assert str(r) == "Upstream exception"
 
     asyncio.run(run_test())
 
