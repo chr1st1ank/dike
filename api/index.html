@@ -123,7 +123,7 @@
 </div>
 <div class="mkapi-docstring">
 <div class="mkapi-section">
-      <div class="mkapi-section-body"><p>Decorator to limit the number of concurrent calls to a coroutine function.</p></div>
+      <div class="mkapi-section-body"><p>Decorator to limit the number of concurrent calls to a coroutine function. Not thread-safe.</p></div>
     </div>
   <div class="mkapi-section parameters">
       <div class="mkapi-section-name parameters">
@@ -159,6 +159,14 @@ if it is called while already running <code>limit</code> times concurrently.</sp
 
 
 </ul></div>
+    </div>
+  <div class="mkapi-section">
+      <div class="mkapi-section-body"><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The decorator is not thread-safe, but only allows for concurrent access by async functions.
+The wrapped function may use multithreading, but only one thread at a time may call the
+function in order to avoid race conditions.</p>
+</div></div>
     </div>
   <div class="mkapi-section examples">
       <div class="mkapi-section-name examples">
@@ -201,13 +209,17 @@ if it is called while already running <code>limit</code> times concurrently.</sp
 <div class='mkapi-object-container'>
   <div class="mkapi-object function code top">
     <div class="mkapi-object-kind function top">function</div>
-    <div class="mkapi-object-body function top"><code class="mkapi-object-name">batch</code><code class="mkapi-object-parenthesis">(</code><code class="mkapi-object-signature">target_batch_size</code>, <code class="mkapi-object-signature">max_waiting_time</code>, <code class="mkapi-object-signature">max_processing_time=10.0</code><code class="mkapi-object-parenthesis">)</code></div>
+    <div class="mkapi-object-body function top"><code class="mkapi-object-name">batch</code><code class="mkapi-object-parenthesis">(</code><code class="mkapi-object-signature">target_batch_size</code>, <code class="mkapi-object-signature">max_waiting_time</code>, <code class="mkapi-object-signature">max_processing_time=10.0</code>, <code class="mkapi-object-signature">argument_type=&#39;list&#39;</code><code class="mkapi-object-parenthesis">)</code></div>
   </div>
   
 </div>
 <div class="mkapi-docstring">
 <div class="mkapi-section">
-      <div class="mkapi-section-body"><p>@batch is a decorator to cumulate function calls and process them in batches.</p></div>
+      <div class="mkapi-section-body"><p>@batch is a decorator to cumulate function calls and process them in batches.
+    Not thread-safe.</p>
+<p>The function to wrap must have arguments of type list or numpy.array which can be aggregated.
+It must return just a single value of the same type. The type has to be specified with the
+<code>argument_type</code> parameter of the decorator.</p></div>
     </div>
   <div class="mkapi-section parameters">
       <div class="mkapi-section-name parameters">
@@ -222,15 +234,23 @@ may also be called with longer arguments than target_batch_size.</span></li>
 
 <li><code class="mkapi-item-name">max_waiting_time</code>
 <span class="mkapi-item-type">(float)</span>
-<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">Maximum waiting time before calling the underlying function although
-the target_batch_size hasn't been reached.</span></li>
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">Maximum waiting time in seconds before calling the underlying function
+although the target_batch_size hasn't been reached.</span></li>
 
 <li><code class="mkapi-item-name">max_processing_time</code>
 <span class="mkapi-item-type">(float, optional)</span>
-<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">Maximum time for the processing itself (without waiting) before an
-asyncio.TimeoutError is raised. Note: It is strongly advised to set a reasonably
-strict timeout here in order not to create starving tasks which never finish in case
-something is wrong with the backend call.</span></li>
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">Maximum time in seconds for the processing itself (without waiting)
+before an asyncio.TimeoutError is raised. Note: It is strongly advised to set a
+reasonably strict timeout here in order not to create starving tasks which never finish
+in case something is wrong with the backend call.</span></li>
+
+<li><code class="mkapi-item-name">argument_type</code>
+<span class="mkapi-item-type">(str, optional)</span>
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">The type of function argument used for batching. One of "list" or "numpy".
+Per default "list" is used, i.e. it is assumed that the input arguments to the
+wrapped functions are lists which can be concatenated. If set to "numpy" the arguments
+are assumed to be numpy arrays which can be concatenated by numpy.concatenate()
+along axis 0.</span></li>
 
 
 </ul></div>
@@ -242,7 +262,12 @@ something is wrong with the backend call.</span></li>
       <div class="mkapi-section-body raises"><ul class="mkapi-items">
 <li><code class="mkapi-item-name">ValueError</code>
 
-<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">If the arguments target_batch_size or max_waiting time are not &gt;= 0.</span></li>
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">If the arguments target_batch_size or max_waiting time are not &gt;= 0 or if the
+argument_type is invalid.</span></li>
+
+<li><code class="mkapi-item-name">ValueError</code>
+
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">When calling the function with incorrect or inconsistent arguments.</span></li>
 
 <li><code class="mkapi-item-name">asyncio.TimeoutError</code>
 
@@ -261,11 +286,16 @@ max_processing_time</span></li>
   <div class="mkapi-section">
       <div class="mkapi-section-body"><p>The wrapped function is called with concatenated arguments of multiple calls.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
+<p class="admonition-title">Notes</p>
 <ul>
-<li>The return value of the wrapped function must be a single iterable</li>
+<li>The decorator is not thread-safe, but only allows for concurrent access by async functions.
+    The wrapped function may use multithreading, but only one thread at a time may call the
+    function in order to avoid race conditions.</li>
+<li>The return value of the wrapped function must be a single iterable.</li>
 <li>All calls to the underlying function need to have the same number of positional arguments and
-    keyword arguments</li>
+    the same keyword arguments. It also isn't possible to mix the two ways to pass an argument.
+    The same argument always has to be passed either as keyword argument or as positional
+    argument.</li>
 </ul>
 </div></div>
     </div>
