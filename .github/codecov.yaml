@@ -5,3 +5,12 @@ comment:
   layout: "files"
   behavior: default
   require_changes: no
+
+coverage:
+  status:
+    patch:
+      default:
+        target: 80%
+    project:
+      default:
+        target: 90%
