@@ -67,7 +67,8 @@ def test_calls_exceeding_limit():
             block_until_released(event, 3),
         )
         with pytest.raises(
-            dike.TooManyCalls, match="Too many calls to .*block_until_released.*limit.*2"
+            dike.TooManyCalls,
+            match="Too many calls to function block_until_released! limit=2 exceeded",
         ):
             assert (await tasks) == [1, 2, 3]
 
