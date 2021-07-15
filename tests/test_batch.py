@@ -1,6 +1,8 @@
 """Tests for for the decorator dike.batch"""
 import asyncio
+import importlib
 import random
+import sys
 
 import numpy as np
 import pytest
@@ -272,6 +274,38 @@ def test_concurrent_calculations_do_not_clash():
     asyncio.run(run_test())
 
 
+def test_no_numpy_available(monkeypatch):
+    """Test if without numpy the decorator works normally but refuses to use numpy"""
+    monkeypatch.setitem(sys.modules, "numpy", None)
+    importlib.reload(dike)
+
+    with pytest.raises(ValueError, match="Unable to use .*numpy.*"):
+
+        @dike.batch(target_batch_size=3, max_waiting_time=10, argument_type="numpy")
+        def g(_):
+            pass
+
+    @dike.batch(target_batch_size=3, max_waiting_time=10)
+    async def f(arg1, arg2):
+        assert arg1 == [0, 1, 2]
+        assert arg2 == ["a", "b", "c"]
+        return [10, 11, 12]
+
+    async def run_test():
+        result = await asyncio.wait_for(
+            asyncio.gather(
+                f([0], ["a"]),
+                f([1], ["b"]),
+                f([2], ["c"]),
+            ),
+            timeout=1.0,
+        )
+
+        assert result == [[10], [11], [12]]
+
+    asyncio.run(run_test())
+
+
 @pytest.mark.parametrize("batch_size", [0, -1, float("-inf")])
 def test_illegal_batch_size_leads_to_value_error(batch_size):
     with pytest.raises(ValueError):
@@ -286,5 +320,14 @@ def test_illegal_waiting_time_leads_to_value_error(waiting_time):
     with pytest.raises(ValueError):
 
         @dike.batch(target_batch_size=1, max_waiting_time=waiting_time)
+        async def f(_):
+            pass
+
+
+@pytest.mark.parametrize("argument_type", ["", "unknown"])
+def test_illegal_argument_type_leads_to_value_error(argument_type):
+    with pytest.raises(ValueError):
+
+        @dike.batch(target_batch_size=1, max_waiting_time=1, argument_type=argument_type)
         async def f(_):
             pass
