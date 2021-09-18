@@ -8,6 +8,7 @@ To use dike in a project
 
 
 ## Managing CPU bound work in a process pool
+
 ```python
 import asyncio
 import concurrent
@@ -15,7 +16,6 @@ import concurrent
 import dike
 
 from my_project import cpu_bound_function
-
 
 pool = concurrent.futures.ProcessPoolExecutor(max_workers=2)
 

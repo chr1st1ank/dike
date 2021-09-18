@@ -1,8 +1,22 @@
 # History
+Changelog in the style of [keepachangelog.com](https://keepachangelog.com/).
+
+Types of changes:
+* 'Added' for new features.
+* 'Changed' for changes in existing functionality.
+* 'Deprecated' for soon-to-be removed features.
+* 'Removed' for now removed features.
+* 'Fixed' for any bug fixes.
+* 'Security' in case of vulnerabilities.
+
+The project uses semantic versioning.
 
 ## Unreleased
 Added: 
 * Doctests to ensure the examples in the documentation keep being correct
+
+Changed:
+* Decorators are now implemented in submodules, but the public interface is unchanged
 
 ## 0.3.0 (2021-07-15)
 Added:

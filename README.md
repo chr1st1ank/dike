@@ -21,8 +21,8 @@ Example with an external web request using the [httpx](https://github.com/encode
 
 ```python
 import asyncio
-import httpx
 import dike
+import httpx
 
 
 @dike.limit_jobs(limit=2)
@@ -88,7 +88,7 @@ async def main():
 
     print(f"Result: {result}")
 
-    
+
 asyncio.run(main())
 ```
 

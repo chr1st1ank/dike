@@ -1,4 +1,5 @@
 """Tests for for the decorator dike.batch"""
+# pylint: disable=missing-function-docstring
 import asyncio
 import importlib
 import random
@@ -81,7 +82,7 @@ def test_single_items_mixed_kwargs_raises_value_error(argtype_converter, arg_typ
                 f(argtype_converter([0]), argtype_converter(["a"])),
                 f(argtype_converter([1]), argtype_converter(["b"])),
                 f(arg2=argtype_converter(["c"]), arg1=argtype_converter([2])),
-                f(argtype_converter([1])),
+                f(argtype_converter([1])),  # pylint: disable=no-value-for-parameter
                 f(argtype_converter([]), argtype_converter([])),
                 return_exceptions=True,
             ),
@@ -277,7 +278,7 @@ def test_concurrent_calculations_do_not_clash():
 def test_no_numpy_available(monkeypatch):
     """Test if without numpy the decorator works normally but refuses to use numpy"""
     monkeypatch.setitem(sys.modules, "numpy", None)
-    importlib.reload(dike)
+    importlib.reload(dike._batch)
 
     with pytest.raises(ValueError, match="Unable to use .*numpy.*"):
 

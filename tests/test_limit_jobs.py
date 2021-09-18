@@ -1,4 +1,5 @@
 """Tests for the dike.limit_jobs decorator"""
+# pylint: disable=missing-function-docstring
 import asyncio
 import re
 

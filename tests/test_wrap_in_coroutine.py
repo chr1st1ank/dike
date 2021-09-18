@@ -1,4 +1,5 @@
 """Tests for the dike.wrap_in_coroutine decorator"""
+# pylint: disable=missing-function-docstring
 import asyncio
 
 from dike import wrap_in_coroutine
