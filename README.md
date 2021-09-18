@@ -64,6 +64,8 @@ with the aggregated input.
 This is useful if the function scales well with the size of the input arguments but you're
 getting the input data in smaller bits, e.g. as individual HTTP requests.
 
+The arguments can be batched together as a Python list or optionally also as numpy array.
+
 Example:
 
 ```python

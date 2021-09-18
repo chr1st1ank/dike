@@ -111,6 +111,7 @@ def batch(
 
         @functools.wraps(func)
         async def batching_call(*args, **kwargs):
+            """This is the actual wrapper function which controls the process"""
             my_batch_no = get_batch_no()
             start_index, stop_index = add_args_to_queue(args, kwargs)
 
@@ -119,6 +120,7 @@ def batch(
             return get_results(start_index, stop_index, my_batch_no)
 
         def get_batch_no():
+            """Return the most recent batch number from the decorator's global state"""
             if batch_no not in result_events:
                 result_events[batch_no] = asyncio.Event()
             return batch_no
@@ -144,6 +146,7 @@ def batch(
             return offset, n_rows_in_queue
 
         async def wait_for_calculation(batch_no_to_calculate):
+            """Pause until the result becomes available or trigger the calculation on timeout"""
             if n_rows_in_queue >= target_batch_size:
                 await calculate(batch_no_to_calculate)
             else:
@@ -160,6 +163,7 @@ def batch(
                         )
 
         async def calculate(batch_no_to_calculate):
+            """Call the decorated coroutine with batched arguments"""
             nonlocal results, queue, results_ready
             if batch_no == batch_no_to_calculate:
                 n_results = len(queue)
@@ -172,6 +176,7 @@ def batch(
                 result_events[batch_no_to_calculate].set()
 
         def pop_args_from_queue():
+            """Get all collected arguments from the queue as batch"""
             nonlocal batch_no, queue, n_rows_in_queue
 
             n_args = len(queue[0][0])
@@ -194,6 +199,7 @@ def batch(
             return args, kwargs
 
         def get_results(start_index: int, stop_index: int, batch_no):
+            """Pop the results for a certain index range from the output buffer"""
             nonlocal results
 
             if isinstance(results[batch_no], Exception):
@@ -205,6 +211,7 @@ def batch(
             return results_to_return
 
         def remove_result(batch_no):
+            """Reduce reference count to output buffer and eventually delete it"""
             nonlocal results_ready, result_events, results
 
             results_ready[batch_no] -= 1
