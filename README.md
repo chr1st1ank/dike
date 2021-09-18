@@ -27,15 +27,19 @@ import dike
 
 @dike.limit_jobs(limit=2)
 async def web_request():
+    """Sends a slow web request"""
     async with httpx.AsyncClient() as client:
         response = await client.get("https://httpstat.us/200?sleep=100")
     return response
 
 
 async def main():
-    responses = await asyncio.gather(
-        web_request(), web_request(), web_request(), return_exceptions=True
-    )
+    # Send three requests at the same time
+    call1 = web_request()
+    call2 = web_request()
+    call3 = web_request()
+    responses = await asyncio.gather(call1, call2, call3, return_exceptions=True)
+    # Print the responses
     for r in responses:
         if isinstance(r, dike.TooManyCalls):
             print("too many calls")
@@ -46,7 +50,7 @@ async def main():
 asyncio.run(main())
 ```
 
-The output shows that the first two requests succeed. The third one hits the concurrency limit:
+The output shows that the first two requests succeed. The third one hits the concurrency limit and a TooManyCalls exception is returned:
 ```
 <Response [200 OK]>
 <Response [200 OK]>
@@ -68,30 +72,31 @@ import dike
 
 
 @dike.batch(target_batch_size=3, max_waiting_time=10)
-async def f(arg1, arg2):
+async def add_args(arg1, arg2):
+    """Elementwise sum of the values in arg1 and arg2"""
     print(f"arg1: {arg1}")
     print(f"arg2: {arg2}")
-    return [10, 11, 12]
+    return [a1 + a2 for a1, a2 in zip(arg1, arg2)]
 
 
 async def main():
     result = await asyncio.gather(
-        f([0], ["a"]),
-        f([1], ["b"]),
-        f([2], ["c"]),
+        add_args([0], [1]),
+        add_args([1], [1]),
+        add_args([2, 3], [1, 1]),
     )
 
     print(f"Result: {result}")
 
-
+    
 asyncio.run(main())
 ```
 
 Output:
 ```
-arg1: [0, 1, 2]
-arg2: ['a', 'b', 'c']
-Result: [[10], [11], [12]]
+arg1: [0, 1, 2, 3]
+arg2: [1, 1, 1, 1]
+Result: [[1], [2], [3, 4]]
 ```
 
 ## Installation

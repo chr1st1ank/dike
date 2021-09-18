@@ -1,7 +1,8 @@
 # History
 
 ## Unreleased
-
+Added: 
+* Doctests to ensure the examples in the documentation keep being correct
 
 ## 0.3.0 (2021-07-15)
 Added:
