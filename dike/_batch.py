@@ -112,6 +112,7 @@ def batch(
         @functools.wraps(func)
         async def batching_call(*args, **kwargs):
             """This is the actual wrapper function which controls the process"""
+            nonlocal results, results_ready, result_events, queue, n_rows_in_queue
             my_batch_no = get_batch_no()
             start_index, stop_index = add_args_to_queue(args, kwargs)
 

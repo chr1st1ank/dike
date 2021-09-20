@@ -332,3 +332,63 @@ def test_illegal_argument_type_leads_to_value_error(argument_type):
         @dike.batch(target_batch_size=1, max_waiting_time=1, argument_type=argument_type)
         async def f(_):
             pass
+
+
+def test_internal_storage_is_cleaned():
+    import inspect
+
+    @dike.batch(target_batch_size=3, max_waiting_time=10)
+    async def f(*args):
+        return [10, 11, 12]
+
+    async def run_test():
+        task1 = asyncio.create_task(f([0]))
+        task2 = asyncio.create_task(f([0]))
+        task3 = asyncio.create_task(f([0]))
+        results = await asyncio.gather(task1, task2, task3)
+        assert results == [[10], [11], [12]]
+
+        # Check if the internal dictionaries are empty (there are no other batches here)
+        locals = inspect.getclosurevars(f).nonlocals
+        # get_results_closure = inspect.getclosurevars(f).nonlocals["get_results"]
+        # internal_results = inspect.getclosurevars(get_results_closure).nonlocals["results"]
+        assert not locals["results"]
+        assert not locals["results_ready"]
+        assert not locals["result_events"]
+        assert not locals["queue"]
+        assert not locals["n_rows_in_queue"]
+
+
+    asyncio.run(run_test())
+
+
+def test_internal_storage_is_cleaned_also_when_cancelled():
+    import inspect
+
+    @dike.batch(target_batch_size=3, max_waiting_time=.1)
+    async def f(*args):
+        return [10, 11, 12]
+
+    async def run_test():
+        task1 = asyncio.create_task(f([0]))
+        await asyncio.sleep(0.01)
+        task1.cancel()
+        task2 = asyncio.create_task(f([0]))
+        task3 = asyncio.create_task(f([0]))
+        await asyncio.sleep(0.01)
+        result2 = await task2
+        result3 = await task3
+        assert result2, result3 == ([11], [12])
+
+        # Check if the internal dictionaries are empty (there are no other batches here)
+        locals = inspect.getclosurevars(f).nonlocals
+        # get_results = inspect.getclosurevars(f).nonlocals["get_results"]
+        # locals = inspect.getclosurevars(get_results).nonlocals
+        assert not locals["results"]
+        assert not locals["results_ready"]
+        assert not locals["result_events"]
+        assert not locals["queue"]
+        assert not locals["n_rows_in_queue"]
+
+
+    asyncio.run(run_test())
