@@ -2,7 +2,7 @@
 import asyncio
 import functools
 from contextlib import contextmanager
-from typing import Dict, List, Tuple, Union
+from typing import Callable, Coroutine, Dict, List, Tuple, Union
 
 try:
     import numpy as np
@@ -18,7 +18,7 @@ def batch(
     max_waiting_time: float,
     max_processing_time: float = 10.0,
     argument_type: str = "list",
-):
+) -> Callable[[Coroutine], Coroutine]:
     """@batch is a decorator to cumulate function calls and process them in batches.
         Not thread-safe.
 
@@ -103,17 +103,17 @@ def batch(
         raise ValueError('Unable to use "numpy" as argument_type because numpy is not available')
 
     def decorator(func):
-        batch_no: int = 0
-        queue: List[Tuple[List, Dict]] = []
+        next_free_batch: int = 0
+        call_args_queue: List[Tuple[List, Dict]] = []
         n_rows_in_queue: int = 0
-        result_events: Dict[int, asyncio.Event] = {}
+        result_ready_events: Dict[int, asyncio.Event] = {}
         results: Dict[int, Union[Exception, List]] = {}
-        results_ready: Dict[int, int] = {}
+        num_results_ready: Dict[int, int] = {}
 
         @functools.wraps(func)
         async def batching_call(*args, **kwargs):
             """This is the actual wrapper function which controls the process"""
-            nonlocal results, results_ready, result_events, queue, n_rows_in_queue
+            nonlocal results, num_results_ready, result_ready_events, call_args_queue, n_rows_in_queue
 
             with enqueue(args, kwargs) as (my_batch_no, start_index, stop_index):
                 await wait_for_calculation(my_batch_no)
@@ -122,20 +122,23 @@ def batch(
         @contextmanager
         def enqueue(args, kwargs) -> (int, int, int):
             """Add call arguments to queue and get the batch number and result indices"""
-            my_batch_no = batch_no
-            if my_batch_no not in result_events:
-                result_events[my_batch_no] = asyncio.Event()
+            batch_no = next_free_batch
+            if batch_no not in result_ready_events:
+                result_ready_events[batch_no] = asyncio.Event()
             start_index, stop_index = add_args_to_queue(args, kwargs)
             try:
-                yield my_batch_no, start_index, stop_index
+                yield batch_no, start_index, stop_index
             finally:
-                remove_result(my_batch_no)
+                remove_result(batch_no)
 
         def add_args_to_queue(args, kwargs):
             """Add a new argument vector to the queue and return result indices"""
-            nonlocal queue, n_rows_in_queue
+            nonlocal call_args_queue, n_rows_in_queue
 
-            if queue and (len(args) != len(queue[0][0]) or kwargs.keys() != queue[0][1].keys()):
+            if call_args_queue and (
+                len(args) != len(call_args_queue[0][0])
+                or kwargs.keys() != call_args_queue[0][1].keys()
+            ):
                 raise ValueError("Inconsistent use of positional and keyword arguments")
             n_rows_call = 0
             if args:
@@ -146,7 +149,7 @@ def batch(
                     break  # We only need one arbitrary keyword argument
             if n_rows_call == 0:
                 raise ValueError("Function called with empty collections as arguments")
-            queue.append((args, kwargs))
+            call_args_queue.append((args, kwargs))
             offset = n_rows_in_queue
             n_rows_in_queue += n_rows_call
             return offset, n_rows_in_queue
@@ -158,50 +161,57 @@ def batch(
             else:
                 try:
                     await asyncio.wait_for(
-                        result_events[batch_no_to_calculate].wait(), timeout=max_waiting_time
+                        result_ready_events[batch_no_to_calculate].wait(), timeout=max_waiting_time
                     )
                 except asyncio.TimeoutError:
-                    if batch_no == batch_no_to_calculate:
+                    if next_free_batch == batch_no_to_calculate:
                         await calculate(batch_no_to_calculate)
                     else:
                         await asyncio.wait_for(
-                            result_events[batch_no_to_calculate].wait(), timeout=max_processing_time
+                            result_ready_events[batch_no_to_calculate].wait(),
+                            timeout=max_processing_time,
                         )
 
         async def calculate(batch_no_to_calculate):
             """Call the decorated coroutine with batched arguments"""
-            nonlocal results, queue, results_ready
-            if batch_no == batch_no_to_calculate:
-                n_results = len(queue)
+            nonlocal results, call_args_queue, num_results_ready
+            if next_free_batch == batch_no_to_calculate:
+                n_results = len(call_args_queue)
                 args, kwargs = pop_args_from_queue()
                 try:
                     results[batch_no_to_calculate] = await func(*args, **kwargs)
                 except Exception as e:  # pylint: disable=broad-except
                     results[batch_no_to_calculate] = e
-                results_ready[batch_no_to_calculate] = n_results
-                result_events[batch_no_to_calculate].set()
+                num_results_ready[batch_no_to_calculate] = n_results
+                result_ready_events[batch_no_to_calculate].set()
 
         def pop_args_from_queue():
             """Get all collected arguments from the queue as batch"""
-            nonlocal batch_no, queue, n_rows_in_queue
+            nonlocal next_free_batch, call_args_queue, n_rows_in_queue
 
-            n_args = len(queue[0][0])
+            n_args = len(call_args_queue[0][0])
             args = []
             for j in range(n_args):
                 if argument_type == "list":
-                    args.append([element for call_args, _ in queue for element in call_args[j]])
+                    args.append(
+                        [element for call_args, _ in call_args_queue for element in call_args[j]]
+                    )
                 elif argument_type == "numpy":
-                    args.append(np.concatenate([call_args[j] for call_args, _ in queue]))
+                    args.append(np.concatenate([call_args[j] for call_args, _ in call_args_queue]))
             kwargs = {}
-            for k in queue[0][1].keys():
+            for k in call_args_queue[0][1].keys():
                 if argument_type == "list":
-                    kwargs[k] = [element for _, call_kwargs in queue for element in call_kwargs[k]]
+                    kwargs[k] = [
+                        element for _, call_kwargs in call_args_queue for element in call_kwargs[k]
+                    ]
                 elif argument_type == "numpy":
-                    kwargs[k] = np.concatenate([call_kwargs[k] for _, call_kwargs in queue])
+                    kwargs[k] = np.concatenate(
+                        [call_kwargs[k] for _, call_kwargs in call_args_queue]
+                    )
 
-            queue = []
+            call_args_queue = []
             n_rows_in_queue = 0
-            batch_no += 1
+            next_free_batch += 1
             return args, kwargs
 
         def get_results(start_index: int, stop_index: int, batch_no):
@@ -216,14 +226,14 @@ def batch(
 
         def remove_result(batch_no):
             """Reduce reference count to output buffer and eventually delete it"""
-            nonlocal results_ready, result_events, results
+            nonlocal num_results_ready, result_ready_events, results
 
-            if results_ready[batch_no] == 1:
-                del result_events[batch_no]
+            if num_results_ready[batch_no] == 1:
+                del result_ready_events[batch_no]
                 del results[batch_no]
-                del results_ready[batch_no]
+                del num_results_ready[batch_no]
             else:
-                results_ready[batch_no] -= 1
+                num_results_ready[batch_no] -= 1
 
         return batching_call
 

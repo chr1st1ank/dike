@@ -2,6 +2,7 @@
 # pylint: disable=missing-function-docstring
 import asyncio
 import importlib
+import inspect
 import random
 import sys
 
@@ -13,6 +14,7 @@ import dike
 
 def exceptions_equal(exception1, exception2):
     """Returns True if the exceptions have the same type and message"""
+    # pylint: disable=unidiomatic-typecheck
     return type(exception1) == type(exception2) and str(exception1) == str(exception2)
 
 
@@ -278,7 +280,7 @@ def test_concurrent_calculations_do_not_clash():
 def test_no_numpy_available(monkeypatch):
     """Test if without numpy the decorator works normally but refuses to use numpy"""
     monkeypatch.setitem(sys.modules, "numpy", None)
-    importlib.reload(dike._batch)
+    importlib.reload(dike._batch)  # pylint: disable=protected-access
 
     with pytest.raises(ValueError, match="Unable to use .*numpy.*"):
 
@@ -335,10 +337,8 @@ def test_illegal_argument_type_leads_to_value_error(argument_type):
 
 
 def test_internal_storage_is_cleaned():
-    import inspect
-
     @dike.batch(target_batch_size=3, max_waiting_time=10)
-    async def f(*args):
+    async def f(*_):
         return [10, 11, 12]
 
     async def run_test():
@@ -349,24 +349,19 @@ def test_internal_storage_is_cleaned():
         assert results == [[10], [11], [12]]
 
         # Check if the internal dictionaries are empty (there are no other batches here)
-        locals = inspect.getclosurevars(f).nonlocals
-        # get_results_closure = inspect.getclosurevars(f).nonlocals["get_results"]
-        # internal_results = inspect.getclosurevars(get_results_closure).nonlocals["results"]
-        assert not locals["results"]
-        assert not locals["results_ready"]
-        assert not locals["result_events"]
-        assert not locals["queue"]
-        assert not locals["n_rows_in_queue"]
-
+        closure_vars = inspect.getclosurevars(f).nonlocals
+        assert not closure_vars["results"]
+        assert not closure_vars["num_results_ready"]
+        assert not closure_vars["result_ready_events"]
+        assert not closure_vars["call_args_queue"]
+        assert not closure_vars["n_rows_in_queue"]
 
     asyncio.run(run_test())
 
 
 def test_internal_storage_is_cleaned_also_when_cancelled():
-    import inspect
-
-    @dike.batch(target_batch_size=3, max_waiting_time=.1)
-    async def f(*args):
+    @dike.batch(target_batch_size=3, max_waiting_time=0.1)
+    async def f(*_):
         return [10, 11, 12]
 
     async def run_test():
@@ -381,14 +376,11 @@ def test_internal_storage_is_cleaned_also_when_cancelled():
         assert result2, result3 == ([11], [12])
 
         # Check if the internal dictionaries are empty (there are no other batches here)
-        locals = inspect.getclosurevars(f).nonlocals
-        # get_results = inspect.getclosurevars(f).nonlocals["get_results"]
-        # locals = inspect.getclosurevars(get_results).nonlocals
-        assert not locals["results"]
-        assert not locals["results_ready"]
-        assert not locals["result_events"]
-        assert not locals["queue"]
-        assert not locals["n_rows_in_queue"]
-
+        closure_vars = inspect.getclosurevars(f).nonlocals
+        assert not closure_vars["results"]
+        assert not closure_vars["num_results_ready"]
+        assert not closure_vars["result_ready_events"]
+        assert not closure_vars["call_args_queue"]
+        assert not closure_vars["n_rows_in_queue"]
 
     asyncio.run(run_test())
