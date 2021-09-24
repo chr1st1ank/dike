@@ -12,11 +12,17 @@ Types of changes:
 The project uses semantic versioning.
 
 ## Unreleased
+
+## 0.3.1 (2021-09-25)
 Added: 
 * Doctests to ensure the examples in the documentation keep being correct
 
+Fixed:
+* A potential memory leak in case was fixed. It could occur if one of the tasks waiting for the
+  result of a function decorated with @batch was cancelled.
+
 Changed:
-* Decorators are now implemented in submodules, but the public interface is unchanged
+* Decorators are now implemented in submodules. The public interface is unchanged
 
 ## 0.3.0 (2021-07-15)
 Added:
