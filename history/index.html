@@ -67,6 +67,8 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#unreleased">Unreleased</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#031-2021-09-25">0.3.1 (2021-09-25)</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#030-2021-07-15">0.3.0 (2021-07-15)</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#020-2021-07-15">0.2.0 (2021-07-15)</a>
@@ -117,7 +119,24 @@
               
                 <!-- BEGIN INCLUDE ../CHANGELOG.md   -->
 <h1 id="history">History</h1>
+<p>Changelog in the style of <a href="https://keepachangelog.com/">keepachangelog.com</a>.</p>
+<p>Types of changes:
+* 'Added' for new features.
+* 'Changed' for changes in existing functionality.
+* 'Deprecated' for soon-to-be removed features.
+* 'Removed' for now removed features.
+* 'Fixed' for any bug fixes.
+* 'Security' in case of vulnerabilities.</p>
+<p>The project uses semantic versioning.</p>
 <h2 id="unreleased">Unreleased</h2>
+<h2 id="031-2021-09-25">0.3.1 (2021-09-25)</h2>
+<p>Added: 
+* Doctests to ensure the examples in the documentation keep being correct</p>
+<p>Fixed:
+* A potential memory leak in case was fixed. It could occur if one of the tasks waiting for the
+  result of a function decorated with @batch was cancelled.</p>
+<p>Changed:
+* Decorators are now implemented in submodules. The public interface is unchanged</p>
 <h2 id="030-2021-07-15">0.3.0 (2021-07-15)</h2>
 <p>Added:
 * Support for numpy arrays in the @batch decorator</p>

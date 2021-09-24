@@ -113,7 +113,7 @@
               
                 <h1 id="api-documentation">API documentation</h1>
 <h2 id="decorators">Decorators</h2>
-<div class="mkapi-node" id="dike.limit_jobs">
+<div class="mkapi-node" id="dike._limit_jobs.limit_jobs">
 <div class='mkapi-object-container'>
   <div class="mkapi-object function code top">
     <div class="mkapi-object-kind function top">function</div>
@@ -139,7 +139,7 @@
     </div>
   <div class="mkapi-section returns">
       <div class="mkapi-section-name returns">
-          <span class="mkapi-section-name-body returns">Returns</span> 
+          <span class="mkapi-section-name-body returns">Returns</span> <span class="mkapi-item-type">(callable(...: ))</span>
         </div>
       <div class="mkapi-section-body returns"><p>The given coroutine function with added concurrency protection</p></div>
     </div>
@@ -163,16 +163,17 @@ if it is called while already running <code>limit</code> times concurrently.</sp
   <div class="mkapi-section">
       <div class="mkapi-section-body"><div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The decorator is not thread-safe, but only allows for concurrent access by async functions.
-The wrapped function may use multithreading, but only one thread at a time may call the
-function in order to avoid race conditions.</p>
+<p>The decorator is not thread-safe, but only allows for concurrent access by async
+functions. The wrapped function may use multithreading, but only one thread at a time
+may call the function in order to avoid race conditions.</p>
 </div></div>
     </div>
   <div class="mkapi-section examples">
       <div class="mkapi-section-name examples">
           <span class="mkapi-section-name-body examples">Examples</span> 
         </div>
-      <div class="mkapi-section-body examples"><div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
+      <div class="mkapi-section-body examples"><div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">dike</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">httpx</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">dike</span>
 <span class="o">...</span>
@@ -189,7 +190,7 @@ function in order to avoid race conditions.</p>
 <span class="o">...</span>         <span class="n">web_request</span><span class="p">(),</span> <span class="n">web_request</span><span class="p">(),</span> <span class="n">web_request</span><span class="p">(),</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span>
 <span class="o">...</span>     <span class="p">)</span>
 <span class="o">...</span>     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
-<span class="o">...</span>         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dike</span><span class="o">.</span><span class="n">TooManyCalls</span><span class="p">):</span>
+<span class="o">...</span>         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dike</span><span class="o">.</span><span class="n">_limit_jobs</span><span class="o">.</span><span class="n">TooManyCalls</span><span class="p">):</span>
 <span class="o">...</span>             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;too many calls&quot;</span><span class="p">)</span>
 <span class="o">...</span>         <span class="k">else</span><span class="p">:</span>
 <span class="o">...</span>             <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
@@ -205,7 +206,7 @@ function in order to avoid race conditions.</p>
 
 </div>
 
-<div class="mkapi-node" id="dike.batch">
+<div class="mkapi-node" id="dike._batch.batch">
 <div class='mkapi-object-container'>
   <div class="mkapi-object function code top">
     <div class="mkapi-object-kind function top">function</div>
@@ -279,7 +280,7 @@ max_processing_time</span></li>
     </div>
   <div class="mkapi-section returns">
       <div class="mkapi-section-name returns">
-          <span class="mkapi-section-name-body returns">Returns</span> 
+          <span class="mkapi-section-name-body returns">Returns</span> <span class="mkapi-item-type">(callable(callable(...: ): callable(...: )))</span>
         </div>
       <div class="mkapi-section-body returns"><p>A coroutine function which executed the wrapped function with batches of input arguments.</p></div>
     </div>
@@ -335,7 +336,7 @@ max_processing_time</span></li>
 </div>
 
 <h2 id="exceptions">Exceptions</h2>
-<div class="mkapi-node" id="dike.TooManyCalls">
+<div class="mkapi-node" id="dike._limit_jobs.TooManyCalls">
 <div class='mkapi-object-container'>
   <div class="mkapi-object class code top">
     <div class="mkapi-object-kind class top">class</div>

@@ -134,21 +134,25 @@ function. This can be useful for limiting queueing times or for limiting the loa
 onto backend services.</p>
 <p>Example with an external web request using the <a href="https://github.com/encode/httpx">httpx</a> library:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">httpx</span>
 <span class="kn">import</span> <span class="nn">dike</span>
+<span class="kn">import</span> <span class="nn">httpx</span>
 
 
 <span class="nd">@dike</span><span class="o">.</span><span class="n">limit_jobs</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">web_request</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Sends a slow web request&quot;&quot;&quot;</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://httpstat.us/200?sleep=100&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">response</span>
 
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">responses</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-        <span class="n">web_request</span><span class="p">(),</span> <span class="n">web_request</span><span class="p">(),</span> <span class="n">web_request</span><span class="p">(),</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
+    <span class="c1"># Send three requests at the same time</span>
+    <span class="n">call1</span> <span class="o">=</span> <span class="n">web_request</span><span class="p">()</span>
+    <span class="n">call2</span> <span class="o">=</span> <span class="n">web_request</span><span class="p">()</span>
+    <span class="n">call3</span> <span class="o">=</span> <span class="n">web_request</span><span class="p">()</span>
+    <span class="n">responses</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">call1</span><span class="p">,</span> <span class="n">call2</span><span class="p">,</span> <span class="n">call3</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Print the responses</span>
     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dike</span><span class="o">.</span><span class="n">TooManyCalls</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;too many calls&quot;</span><span class="p">)</span>
@@ -158,7 +162,7 @@ onto backend services.</p>
 
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
-<p>The output shows that the first two requests succeed. The third one hits the concurrency limit:
+<p>The output shows that the first two requests succeed. The third one hits the concurrency limit and a TooManyCalls exception is returned:
 <div class="highlight"><pre><span></span><code>&lt;Response [200 OK]&gt;
 &lt;Response [200 OK]&gt;
 too many calls
@@ -168,23 +172,25 @@ too many calls
 with the aggregated input.</p>
 <p>This is useful if the function scales well with the size of the input arguments but you're
 getting the input data in smaller bits, e.g. as individual HTTP requests.</p>
+<p>The arguments can be batched together as a Python list or optionally also as numpy array.</p>
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">dike</span>
 
 
 <span class="nd">@dike</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">target_batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_waiting_time</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">add_args</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Elementwise sum of the values in arg1 and arg2&quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;arg1: </span><span class="si">{</span><span class="n">arg1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;arg2: </span><span class="si">{</span><span class="n">arg2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">a1</span> <span class="o">+</span> <span class="n">a2</span> <span class="k">for</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)]</span>
 
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-        <span class="n">f</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]),</span>
-        <span class="n">f</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]),</span>
-        <span class="n">f</span><span class="p">([</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]),</span>
+        <span class="n">add_args</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">add_args</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">add_args</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
     <span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -193,9 +199,9 @@ getting the input data in smaller bits, e.g. as individual HTTP requests.</p>
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
 <p>Output:
-<div class="highlight"><pre><span></span><code>arg1: [0, 1, 2]
-arg2: [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
-Result: [[10], [11], [12]]
+<div class="highlight"><pre><span></span><code>arg1: [0, 1, 2, 3]
+arg2: [1, 1, 1, 1]
+Result: [[1], [2], [3, 4]]
 </code></pre></div></p>
 <h2 id="installation">Installation</h2>
 <p>Simply install from pypi. The library is pure Python without any dependencies other than the
@@ -257,6 +263,6 @@ standard library.
 </html>
 
 <!--
-MkDocs version : 1.2.1
-Build Date UTC : 2021-07-15 17:37:28.061766+00:00
+MkDocs version : 1.2.2
+Build Date UTC : 2021-09-24 23:27:42.516913+00:00
 -->
