@@ -2,6 +2,7 @@
 # pylint: disable=missing-function-docstring
 import asyncio
 import importlib
+import inspect
 import random
 import sys
 
@@ -13,6 +14,7 @@ import dike
 
 def exceptions_equal(exception1, exception2):
     """Returns True if the exceptions have the same type and message"""
+    # pylint: disable=unidiomatic-typecheck
     return type(exception1) == type(exception2) and str(exception1) == str(exception2)
 
 
@@ -278,7 +280,7 @@ def test_concurrent_calculations_do_not_clash():
 def test_no_numpy_available(monkeypatch):
     """Test if without numpy the decorator works normally but refuses to use numpy"""
     monkeypatch.setitem(sys.modules, "numpy", None)
-    importlib.reload(dike._batch)
+    importlib.reload(dike._batch)  # pylint: disable=protected-access
 
     with pytest.raises(ValueError, match="Unable to use .*numpy.*"):
 
@@ -332,3 +334,52 @@ def test_illegal_argument_type_leads_to_value_error(argument_type):
         @dike.batch(target_batch_size=1, max_waiting_time=1, argument_type=argument_type)
         async def f(_):
             pass
+
+
+def test_internal_storage_is_cleaned():
+    @dike.batch(target_batch_size=3, max_waiting_time=10)
+    async def f(*_):
+        return [10, 11, 12]
+
+    async def run_test():
+        task1 = asyncio.create_task(f([0]))
+        task2 = asyncio.create_task(f([0]))
+        task3 = asyncio.create_task(f([0]))
+        results = await asyncio.gather(task1, task2, task3)
+        assert results == [[10], [11], [12]]
+
+        # Check if the internal dictionaries are empty (there are no other batches here)
+        closure_vars = inspect.getclosurevars(f).nonlocals
+        assert not closure_vars["results"]
+        assert not closure_vars["num_results_ready"]
+        assert not closure_vars["result_ready_events"]
+        assert not closure_vars["call_args_queue"]
+        assert not closure_vars["n_rows_in_queue"]
+
+    asyncio.run(run_test())
+
+
+def test_internal_storage_is_cleaned_also_when_cancelled():
+    @dike.batch(target_batch_size=3, max_waiting_time=0.01)
+    async def f(*_):
+        return [10, 11, 12]
+
+    async def run_test():
+        task1 = asyncio.create_task(f([0]))
+        await asyncio.sleep(0)
+        task2 = asyncio.create_task(f([0]))
+        task3 = asyncio.create_task(f([0]))
+        task1.cancel()
+        result2 = await task2
+        result3 = await task3
+        assert result2, result3 == ([11], [12])
+
+        # Check if the internal dictionaries are empty (there are no other batches here)
+        closure_vars = inspect.getclosurevars(f).nonlocals
+        assert not closure_vars["results"]
+        assert not closure_vars["num_results_ready"]
+        assert not closure_vars["result_ready_events"]
+        assert not closure_vars["call_args_queue"]
+        assert not closure_vars["n_rows_in_queue"]
+
+    asyncio.run(run_test())
