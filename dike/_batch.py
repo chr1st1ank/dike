@@ -1,6 +1,7 @@
 """Implementation of the @dike.batch decorator"""
 import asyncio
 import functools
+from contextlib import contextmanager
 from typing import Dict, List, Tuple, Union
 
 try:
@@ -113,18 +114,22 @@ def batch(
         async def batching_call(*args, **kwargs):
             """This is the actual wrapper function which controls the process"""
             nonlocal results, results_ready, result_events, queue, n_rows_in_queue
-            my_batch_no = get_batch_no()
+
+            with enqueue(args, kwargs) as (my_batch_no, start_index, stop_index):
+                await wait_for_calculation(my_batch_no)
+                return get_results(start_index, stop_index, my_batch_no)
+
+        @contextmanager
+        def enqueue(args, kwargs) -> (int, int, int):
+            """Add call arguments to queue and get the batch number and result indices"""
+            my_batch_no = batch_no
+            if my_batch_no not in result_events:
+                result_events[my_batch_no] = asyncio.Event()
             start_index, stop_index = add_args_to_queue(args, kwargs)
-
-            await wait_for_calculation(my_batch_no)
-
-            return get_results(start_index, stop_index, my_batch_no)
-
-        def get_batch_no():
-            """Return the most recent batch number from the decorator's global state"""
-            if batch_no not in result_events:
-                result_events[batch_no] = asyncio.Event()
-            return batch_no
+            try:
+                yield my_batch_no, start_index, stop_index
+            finally:
+                remove_result(my_batch_no)
 
         def add_args_to_queue(args, kwargs):
             """Add a new argument vector to the queue and return result indices"""
@@ -205,21 +210,20 @@ def batch(
 
             if isinstance(results[batch_no], Exception):
                 exc = results[batch_no]
-                remove_result(batch_no)
                 raise exc
             results_to_return = results[batch_no][start_index:stop_index]
-            remove_result(batch_no)
             return results_to_return
 
         def remove_result(batch_no):
             """Reduce reference count to output buffer and eventually delete it"""
             nonlocal results_ready, result_events, results
 
-            results_ready[batch_no] -= 1
-            if results_ready[batch_no] == 0:
+            if results_ready[batch_no] == 1:
                 del result_events[batch_no]
                 del results[batch_no]
                 del results_ready[batch_no]
+            else:
+                results_ready[batch_no] -= 1
 
         return batching_call
 
