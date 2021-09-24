@@ -3,9 +3,9 @@
 **Python asyncio tools for web service resilience**
 
 * Documentation: <https://chr1st1ank.github.io/dike/>
-* License: Apache-2.0
 
 [<img src="https://img.shields.io/pypi/v/dike.svg" alt="Release Status">](https://pypi.python.org/pypi/dike)
+[![GitHub license](https://img.shields.io/github/license/chr1st1ank/dike)](https://github.com/chr1st1ank/dike/blob/main/LICENSE)
 [<img src="https://github.com/chr1st1ank/dike/actions/workflows/test.yml/badge.svg?branch=main" alt="CI Status">](https://github.com/chr1st1ank/dike/actions)
 [![codecov](https://codecov.io/gh/chr1st1ank/dike/branch/main/graph/badge.svg?token=4oBkRHXbfa)](https://codecov.io/gh/chr1st1ank/dike)
 
