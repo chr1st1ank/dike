@@ -1,14 +1,14 @@
 """Implementation of the @dike.limit_jobs decorator"""
 import functools
 import inspect
-from typing import Callable, Coroutine
+from typing import Any, Callable, Coroutine
 
 
 class TooManyCalls(Exception):
     """Error raised by @limit_jobs when a call exceeds the preset limit"""
 
 
-def limit_jobs(*, limit: int) -> Callable[[Coroutine], Coroutine]:
+def limit_jobs(*, limit: int) -> Callable[..., Coroutine[Any, Any, Any]]:
     """Decorator to limit the number of concurrent calls to a coroutine function. Not thread-safe.
 
     Args:

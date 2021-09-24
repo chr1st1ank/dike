@@ -2,7 +2,7 @@
 import asyncio
 import functools
 from contextlib import contextmanager
-from typing import Callable, Coroutine, Dict, List, Tuple, Union
+from typing import Any, Callable, Coroutine, Dict, List, Tuple, Union
 
 try:
     import numpy as np
@@ -18,7 +18,7 @@ def batch(
     max_waiting_time: float,
     max_processing_time: float = 10.0,
     argument_type: str = "list",
-) -> Callable[[Coroutine], Coroutine]:
+) -> Callable[[Callable[..., Coroutine[Any, Any, Any]]], Callable[..., Coroutine[Any, Any, Any]]]:
     """@batch is a decorator to cumulate function calls and process them in batches.
         Not thread-safe.
 

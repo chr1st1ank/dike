@@ -360,17 +360,16 @@ def test_internal_storage_is_cleaned():
 
 
 def test_internal_storage_is_cleaned_also_when_cancelled():
-    @dike.batch(target_batch_size=3, max_waiting_time=0.1)
+    @dike.batch(target_batch_size=3, max_waiting_time=0.01)
     async def f(*_):
         return [10, 11, 12]
 
     async def run_test():
         task1 = asyncio.create_task(f([0]))
-        await asyncio.sleep(0.01)
-        task1.cancel()
+        await asyncio.sleep(0)
         task2 = asyncio.create_task(f([0]))
         task3 = asyncio.create_task(f([0]))
-        await asyncio.sleep(0.01)
+        task1.cancel()
         result2 = await task2
         result3 = await task3
         assert result2, result3 == ([11], [12])
