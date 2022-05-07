@@ -34,6 +34,9 @@ def retry(
     Returns:
         The given coroutine function with added exception handling and retry logic.
 
+    Raises:
+        ValueError: For invalid configuration arguments.
+
     Examples:
         >>> import asyncio
         >>> import httpx
