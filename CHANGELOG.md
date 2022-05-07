@@ -12,9 +12,11 @@ Types of changes:
 The project uses semantic versioning.
 
 ## Unreleased
+Added:
+* @retry decorator for retries of coroutine calls.
 
 ## 0.3.1 (2021-09-25)
-Added: 
+Added:
 * Doctests to ensure the examples in the documentation keep being correct
 
 Fixed:
