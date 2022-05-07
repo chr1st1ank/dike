@@ -44,14 +44,16 @@ def test_exception_with_retry_failed(attempts, caplog):
         nonlocal i
         if i > 0:
             i -= 1
-            raise ValueError()
+            raise ValueError("failure")
         return "x"
 
     with pytest.raises(ValueError):
         print(asyncio.run(f()))
     assert i == 2 - attempts
-
-    print(caplog.records)
+    assert caplog.messages == [
+        "Caught exception ValueError('failure'). Retrying in 0s ..."
+        for _ in range(attempts - 1)
+    ]
 
 
 @pytest.mark.parametrize(
