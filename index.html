@@ -55,6 +55,8 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#features">Features</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#retry-decorator-for-asynchronous-functions">Retry decorator for asynchronous functions</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#concurrency-limiting-for-asynchronous-functions">Concurrency limiting for asynchronous functions</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#mini-batching-for-asynchronous-function-calls">Mini-batching for asynchronous function calls</a>
@@ -122,14 +124,55 @@
 <p><strong>Python asyncio tools for web service resilience</strong></p>
 <ul>
 <li>Documentation: <a href="https://chr1st1ank.github.io/dike/">https://chr1st1ank.github.io/dike/</a></li>
-<li>License: Apache-2.0</li>
 </ul>
 <p><a href="https://pypi.python.org/pypi/dike"><img src="https://img.shields.io/pypi/v/dike.svg" alt="Release Status"></a>
+<a href="https://github.com/chr1st1ank/dike/blob/main/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/chr1st1ank/dike" /></a>
 <a href="https://github.com/chr1st1ank/dike/actions"><img src="https://github.com/chr1st1ank/dike/actions/workflows/test.yml/badge.svg?branch=main" alt="CI Status"></a>
 <a href="https://codecov.io/gh/chr1st1ank/dike"><img alt="codecov" src="https://codecov.io/gh/chr1st1ank/dike/branch/main/graph/badge.svg?token=4oBkRHXbfa" /></a></p>
 <h2 id="features">Features</h2>
+<h3 id="retry-decorator-for-asynchronous-functions">Retry decorator for asynchronous functions</h3>
+<p>A very common task especially for network calls is an automatic retry with proper exception
+logging. There are good implementations like the <a href="https://pypi.org/project/retry/">retry</a>
+package for classic functions. But dike provides a similar implementation for coroutine functions.
+This is available with the <code>@retry</code> decorator.</p>
+<p>Simplified example:
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">dike</span>
+
+
+<span class="nd">@dike</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">attempts</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">milliseconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="n">exception_types</span><span class="o">=</span><span class="ne">RuntimeError</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">web_request</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Request failed!&quot;</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">web_request</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div></p>
+<p>The output shows first a warning log message including the exception info (that's configurable).
+This is especially useful if you use structured logging.
+<div class="highlight"><pre><span></span><code># Log for first attempt:
+WARNING:dike:Caught exception RuntimeError(&#39;Request failed!&#39;). Retrying in 0.01s ...
+Traceback (most recent call last):
+...
+RuntimeError: Request failed!
+</code></pre></div></p>
+<p>Then, the for the final failure the exception is propagated to the function caller:
+<div class="highlight"><pre><span></span><code>Traceback (most recent call last):
+  ...
+RuntimeError: Request failed!
+
+Process finished with exit code 1
+</code></pre></div></p>
 <h3 id="concurrency-limiting-for-asynchronous-functions">Concurrency limiting for asynchronous functions</h3>
-<p>The <code>@limit_jobs</code> decorator allows to limit the number of concurrent excecutions of a coroutine 
+<p>The <code>@limit_jobs</code> decorator allows to limit the number of concurrent excecutions of a coroutine
 function. This can be useful for limiting queueing times or for limiting the load put
 onto backend services.</p>
 <p>Example with an external web request using the <a href="https://github.com/encode/httpx">httpx</a> library:</p>
@@ -168,7 +211,7 @@ onto backend services.</p>
 too many calls
 </code></pre></div></p>
 <h3 id="mini-batching-for-asynchronous-function-calls">Mini-batching for asynchronous function calls</h3>
-<p>The <code>@batch</code> decorator groups function calls into batches and only calls the wrapped function 
+<p>The <code>@batch</code> decorator groups function calls into batches and only calls the wrapped function
 with the aggregated input.</p>
 <p>This is useful if the function scales well with the size of the input arguments but you're
 getting the input data in smaller bits, e.g. as individual HTTP requests.</p>
@@ -264,5 +307,5 @@ standard library.
 
 <!--
 MkDocs version : 1.2.2
-Build Date UTC : 2021-09-24 23:27:42.516913+00:00
+Build Date UTC : 2022-05-08 18:08:40.261637+00:00
 -->

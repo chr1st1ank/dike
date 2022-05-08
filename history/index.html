@@ -67,6 +67,8 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#unreleased">Unreleased</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#040-2022-05-08">0.4.0 (2022-05-08)</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#031-2021-09-25">0.3.1 (2021-09-25)</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#030-2021-07-15">0.3.0 (2021-07-15)</a>
@@ -129,8 +131,11 @@
 * 'Security' in case of vulnerabilities.</p>
 <p>The project uses semantic versioning.</p>
 <h2 id="unreleased">Unreleased</h2>
+<h2 id="040-2022-05-08">0.4.0 (2022-05-08)</h2>
+<p>Added:
+* New @retry decorator for retries of coroutine calls.</p>
 <h2 id="031-2021-09-25">0.3.1 (2021-09-25)</h2>
-<p>Added: 
+<p>Added:
 * Doctests to ensure the examples in the documentation keep being correct</p>
 <p>Fixed:
 * A potential memory leak in case was fixed. It could occur if one of the tasks waiting for the
@@ -150,8 +155,8 @@
   max_waiting_time at the same moment</p>
 <h2 id="010-2021-07-13">0.1.0 (2021-07-13)</h2>
 <p>Added:
-* @batch decorator for minibatching of coroutine calls.
-* @limit_jobs decorator to limit the number of concurrent calls to a coroutine function.</p>
+* New @batch decorator for minibatching of coroutine calls.
+* New @limit_jobs decorator to limit the number of concurrent calls to a coroutine function.</p>
 <!-- END INCLUDE -->
               
             </div>
