@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from typing import Any, Callable, Coroutine, Dict, List, Tuple, Union
 
 try:
-    import numpy as np
+    import numpy as np  # type: ignore
 except ImportError:
     np = None
 
@@ -220,8 +220,8 @@ def batch(
 
             if isinstance(results[batch_no], Exception):
                 exc = results[batch_no]
-                raise exc
-            results_to_return = results[batch_no][start_index:stop_index]
+                raise exc  # type: ignore
+            results_to_return = results[batch_no][start_index:stop_index]  # type: ignore
             return results_to_return
 
         def remove_result(batch_no):

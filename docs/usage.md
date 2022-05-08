@@ -29,4 +29,3 @@ def calculate_in_pool(args):
 
 
 ## Minibatching the inputs of a machine learning model
-

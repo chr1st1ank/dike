@@ -51,8 +51,7 @@ def test_exception_with_retry_failed(attempts, caplog):
         print(asyncio.run(f()))
     assert i == 2 - attempts
     assert caplog.messages == [
-        "Caught exception ValueError('failure'). Retrying in 0s ..."
-        for _ in range(attempts - 1)
+        "Caught exception ValueError('failure'). Retrying in 0s ..." for _ in range(attempts - 1)
     ]
 
 

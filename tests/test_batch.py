@@ -265,7 +265,7 @@ def test_concurrent_calculations_do_not_clash():
 
     async def do_n_calculations(n):
         for _ in range(n):
-            number = random.randint(0, 2 ** 20)
+            number = random.randint(0, 2**20)
             result = await (f([number]))
             assert result[0] == number * 2
 

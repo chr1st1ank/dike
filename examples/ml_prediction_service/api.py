@@ -9,9 +9,10 @@ import concurrent
 import random
 from typing import List
 
-import dike
 import numpy as np
 from fastapi import FastAPI, Response
+
+import dike
 
 app = FastAPI()
 
