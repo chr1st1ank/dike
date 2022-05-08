@@ -4,7 +4,7 @@ import datetime
 import functools
 import inspect
 import logging
-from typing import Callable, Union, Type, Tuple, Awaitable
+from typing import Awaitable, Callable, Tuple, Type, Union
 
 logger = logging.getLogger("dike")
 
