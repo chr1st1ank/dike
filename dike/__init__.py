@@ -5,6 +5,7 @@ from typing import Callable
 
 from ._batch import batch
 from ._limit_jobs import TooManyCalls, limit_jobs
+from ._retry import retry
 
 
 def wrap_in_coroutine(func: Callable) -> Callable:
@@ -28,4 +29,4 @@ def wrap_in_coroutine(func: Callable) -> Callable:
     return _wrapper
 
 
-__all__ = ["batch", "limit_jobs", "TooManyCalls", "wrap_in_coroutine"]
+__all__ = ["batch", "limit_jobs", "retry", "TooManyCalls", "wrap_in_coroutine"]

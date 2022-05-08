@@ -12,8 +12,57 @@
 
 ## Features
 
+### Retry decorator for asynchronous functions
+A very common task especially for network calls is an automatic retry with proper exception
+logging. There are good implementations like the [retry](https://pypi.org/project/retry/)
+package for classic functions. But dike provides a similar implementation for coroutine functions.
+This is available with the `@retry` decorator.
+
+Simplified example:
+```python
+import asyncio
+import datetime
+import logging
+import sys
+
+import dike
+
+
+@dike.retry(attempts=2, delay=datetime.timedelta(milliseconds=10), exception_types=RuntimeError)
+async def web_request():
+    raise RuntimeError("Request failed!")
+
+
+async def main():
+    response = await web_request()
+    print(response)
+
+logging.basicConfig(stream=sys.stdout)
+asyncio.run(main())
+```
+
+The output shows first a warning log message including the exception info (that's configurable).
+This is especially useful if you use structured logging.
+```
+# Log for first attempt:
+WARNING:dike:Caught exception RuntimeError('Request failed!'). Retrying in 0.01s ...
+Traceback (most recent call last):
+...
+RuntimeError: Request failed!
+```
+
+Then, the for the final failure the exception is propagated to the function caller:
+```
+Traceback (most recent call last):
+  ...
+RuntimeError: Request failed!
+
+Process finished with exit code 1
+```
+
+
 ### Concurrency limiting for asynchronous functions
-The `@limit_jobs` decorator allows to limit the number of concurrent excecutions of a coroutine 
+The `@limit_jobs` decorator allows to limit the number of concurrent excecutions of a coroutine
 function. This can be useful for limiting queueing times or for limiting the load put
 onto backend services.
 
@@ -58,7 +107,7 @@ too many calls
 ```
 
 ### Mini-batching for asynchronous function calls
-The `@batch` decorator groups function calls into batches and only calls the wrapped function 
+The `@batch` decorator groups function calls into batches and only calls the wrapped function
 with the aggregated input.
 
 This is useful if the function scales well with the size of the input arguments but you're
