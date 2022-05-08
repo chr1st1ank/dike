@@ -12,6 +12,8 @@ Types of changes:
 The project uses semantic versioning.
 
 ## Unreleased
+
+## 0.4.0 (2022-05-08)
 Added:
 * New @retry decorator for retries of coroutine calls.
 
