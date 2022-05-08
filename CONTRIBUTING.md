@@ -104,7 +104,6 @@ A reminder for the maintainers on how to deploy.
 
 On branch "main":
 - Adjust CHANGELOG.md as described on https://keepachangelog.com
-- Adjust the version number in dike/__init__.py
 - Then run `poetry version [major | minor | patch]`
 - Commit and push the changes
 - Create a github release and watch the [release workflow](https://github.com/chr1st1ank/dike/actions/workflows/release.yml)

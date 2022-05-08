@@ -13,7 +13,7 @@ The project uses semantic versioning.
 
 ## Unreleased
 Added:
-* @retry decorator for retries of coroutine calls.
+* New @retry decorator for retries of coroutine calls.
 
 ## 0.3.1 (2021-09-25)
 Added:
@@ -42,5 +42,5 @@ Fixed:
 
 ## 0.1.0 (2021-07-13)
 Added:
-* @batch decorator for minibatching of coroutine calls.
-* @limit_jobs decorator to limit the number of concurrent calls to a coroutine function.
+* New @batch decorator for minibatching of coroutine calls.
+* New @limit_jobs decorator to limit the number of concurrent calls to a coroutine function.
