@@ -18,12 +18,11 @@ DOCS_INDEX = DOCS_BUILD_DIR.joinpath("index.html")
 COVERAGE_FILE = ROOT_DIR.joinpath(".coverage")
 COVERAGE_DIR = ROOT_DIR.joinpath("htmlcov")
 COVERAGE_REPORT = COVERAGE_DIR.joinpath("index.html")
-SOURCE_DIR = ROOT_DIR.joinpath("{{ cookiecutter.project_slug }}")
+SOURCE_DIR = ROOT_DIR.joinpath("dike")
 TEST_DIR = ROOT_DIR.joinpath("tests")
 PYTHON_TARGETS = [
     SOURCE_DIR,
     TEST_DIR,
-    ROOT_DIR.joinpath("noxfile.py"),
     Path(__file__),
 ]
 PYTHON_TARGETS_STR = " ".join([str(p) for p in PYTHON_TARGETS])
@@ -129,7 +128,7 @@ def lint(c):
 def mypy(c):
     # type: (Context) -> None
     """Run mypy."""
-    _run(c, f"poetry run mypy {PYTHON_TARGETS_STR}")
+    _run(c, "poetry run mypy dike")
 
 
 @task()
@@ -156,22 +155,11 @@ def coverage(c, fmt="report", open_browser=False):
         webbrowser.open(COVERAGE_REPORT.as_uri())
 
 
-@task(
-    help={
-        "serve": "Build the docs watching for changes",
-        "open_browser": "Open the docs in the web browser",
-    }
-)
-def docs(c, serve=False, open_browser=False):
-    # type: (Context, bool, bool) -> None
+@task()
+def docs(c):
+    # type: (Context) -> None
     """Build documentation."""
-    _run(c, f"sphinx-apidoc -o {DOCS_DIR} {SOURCE_DIR}")
-    build_docs = f"sphinx-build -b html {DOCS_DIR} {DOCS_BUILD_DIR}"
-    _run(c, build_docs)
-    if open_browser:
-        webbrowser.open(DOCS_INDEX.absolute().as_uri())
-    if serve:
-        _run(c, f"poetry run watchmedo shell-command -p '*.rst;*.md' -c '{build_docs}' -R -D .")
+    _run(c, "poetry run mkdocs build")
 
 
 @task(pre=[clean, hooks, mypy, docs, safety, tests, coverage])

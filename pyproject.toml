@@ -27,7 +27,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.7.1,<4.0"
-pymdown-extensions = {version = "^8.2", extras = ["docs"]}
+pymdown-extensions = {version = "^9.4", extras = ["docs"]}
 
 [tool.poetry.extras]
 test = [

@@ -1,4 +1,4 @@
-{% raw %}name: "Pre-commit autoupdate"
+name: "Pre-commit autoupdate"
 
 on:
   schedule:
@@ -36,4 +36,4 @@ jobs:
             # Update pre-commit hooks
 
             - Update pre-commit hooks to the latest version.
-          delete-branch: true{% endraw %}
+          delete-branch: true
