@@ -12,6 +12,8 @@ Types of changes:
 The project uses semantic versioning.
 
 ## [Unreleased]
+
+## [1.0.0] - 2022-05-09
 ### Added:
 * Package API declared stable.
 
