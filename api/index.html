@@ -1,211 +1,101 @@
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  
-  <link rel="canonical" href="https://github.io/chr1st1ank/dike/api/">
-  <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>API documentation - dike</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
-
-  <link rel="stylesheet" href="../css/theme.css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
-  <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet" />
-  <link href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet" />
-  <link href="../css/mkapi-common.css" rel="stylesheet" />
-  <link href="../css/mkapi-readthedocs.css" rel="stylesheet" />
-  
-  <script>
-    // Current page data
-    var mkdocs_page_name = "API documentation";
-    var mkdocs_page_input_path = "api.md";
-    var mkdocs_page_url = "/chr1st1ank/dike/api/";
-  </script>
-  
-  <script src="../js/jquery-2.1.1.min.js" defer></script>
-  <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script> 
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://github.io/chr1st1ank/dike/api/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>API documentation - dike</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet" />
+        <link href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet" />
+        <link href="../css/mkapi-common.css" rel="stylesheet" />
+        <link href="../css/mkapi-readthedocs.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "API documentation";
+        var mkdocs_page_input_path = "api.md";
+        var mkdocs_page_url = "/chr1st1ank/dike/api/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> dike</a>
-        <div role="search">
+          <a href=".." class="icon icon-home"> dike
+        </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
-                    </li>
-                </ul>
-                <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal current" href="./">API documentation</a>
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">API documentation</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#decorators">Decorators</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#exceptions">Exceptions</a>
     </li>
     </ul>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../history/">History</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contributing</a>
-                    </li>
-                </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../history/">History</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contributing</a>
+                </li>
+              </ul>
       </div>
     </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">dike</a>
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">dike</a>
+        
       </nav>
-
-      
       <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="..">Docs</a> &raquo;</li>
-    
-      
-    
-    <li>API documentation</li>
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>API documentation</li>
     <li class="wy-breadcrumbs-aside">
-      
         <a href="https://github.com/chr1st1ank/dike/edit/master/docs/api.md"> Edit on dike</a>
-      
     </li>
   </ul>
-  
   <hr/>
 </div>
 
-          <div role="main">
-            <div class="section">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
               
                 <h1 id="api-documentation">API documentation</h1>
 <h2 id="decorators">Decorators</h2>
-<div class="mkapi-node" id="dike._limit_jobs.limit_jobs">
-<div class='mkapi-object-container'>
-  <div class="mkapi-object function code top">
-    <div class="mkapi-object-kind function top">function</div>
-    <div class="mkapi-object-body function top"><code class="mkapi-object-name">limit_jobs</code><code class="mkapi-object-parenthesis">(</code><code class="mkapi-object-signature">limit</code><code class="mkapi-object-parenthesis">)</code></div>
-  </div>
-  
-</div>
-<div class="mkapi-docstring">
-<div class="mkapi-section">
-      <div class="mkapi-section-body"><p>Decorator to limit the number of concurrent calls to a coroutine function. Not thread-safe.</p></div>
-    </div>
-  <div class="mkapi-section parameters">
-      <div class="mkapi-section-name parameters">
-          <span class="mkapi-section-name-body parameters">Parameters</span> 
-        </div>
-      <div class="mkapi-section-body parameters"><ul class="mkapi-items">
-<li><code class="mkapi-item-name">limit</code>
-<span class="mkapi-item-type">(int)</span>
-<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">The maximum number of ongoing calls allowed at any time</span></li>
-
-
-</ul></div>
-    </div>
-  <div class="mkapi-section returns">
-      <div class="mkapi-section-name returns">
-          <span class="mkapi-section-name-body returns">Returns</span> <span class="mkapi-item-type">(callable(...: ))</span>
-        </div>
-      <div class="mkapi-section-body returns"><p>The given coroutine function with added concurrency protection</p></div>
-    </div>
-  <div class="mkapi-section raises">
-      <div class="mkapi-section-name raises">
-          <span class="mkapi-section-name-body raises">Raises</span> 
-        </div>
-      <div class="mkapi-section-body raises"><ul class="mkapi-items">
-<li><code class="mkapi-item-name">TooManyCalls</code>
-
-<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">The decorated function raises a dike.ToomanyCalls exception
-if it is called while already running <code>limit</code> times concurrently.</span></li>
-
-<li><code class="mkapi-item-name">ValueError</code>
-
-<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">If the decorator is applied to something else than an async def function</span></li>
-
-
-</ul></div>
-    </div>
-  <div class="mkapi-section">
-      <div class="mkapi-section-body"><div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The decorator is not thread-safe, but only allows for concurrent access by async
-functions. The wrapped function may use multithreading, but only one thread at a time
-may call the function in order to avoid race conditions.</p>
-</div></div>
-    </div>
-  <div class="mkapi-section examples">
-      <div class="mkapi-section-name examples">
-          <span class="mkapi-section-name-body examples">Examples</span> 
-        </div>
-      <div class="mkapi-section-body examples"><div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">dike</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">httpx</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">dike</span>
-<span class="o">...</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nd">@dike</span><span class="o">.</span><span class="n">limit_jobs</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="o">...</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">web_request</span><span class="p">():</span>
-<span class="o">...</span>     <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-<span class="o">...</span>         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://httpstat.us/200?sleep=100&quot;</span><span class="p">)</span>
-<span class="o">...</span>     <span class="k">return</span> <span class="n">response</span>
-<span class="o">...</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-<span class="o">...</span>     <span class="n">responses</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-<span class="o">...</span>         <span class="n">web_request</span><span class="p">(),</span> <span class="n">web_request</span><span class="p">(),</span> <span class="n">web_request</span><span class="p">(),</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span>
-<span class="o">...</span>     <span class="p">)</span>
-<span class="o">...</span>     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
-<span class="o">...</span>         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dike</span><span class="o">.</span><span class="n">_limit_jobs</span><span class="o">.</span><span class="n">TooManyCalls</span><span class="p">):</span>
-<span class="o">...</span>             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;too many calls&quot;</span><span class="p">)</span>
-<span class="o">...</span>         <span class="k">else</span><span class="p">:</span>
-<span class="o">...</span>             <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-<span class="o">...</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span> <span class="n">OK</span><span class="p">]</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span> <span class="n">OK</span><span class="p">]</span><span class="o">&gt;</span>
-<span class="n">too</span> <span class="n">many</span> <span class="n">calls</span>
-</code></pre></div></div>
-    </div>
-  </div>
-
-</div>
-
 <div class="mkapi-node" id="dike._batch.batch">
 <div class='mkapi-object-container'>
   <div class="mkapi-object function code top">
@@ -335,6 +225,198 @@ max_processing_time</span></li>
 
 </div>
 
+<div class="mkapi-node" id="dike._limit_jobs.limit_jobs">
+<div class='mkapi-object-container'>
+  <div class="mkapi-object function code top">
+    <div class="mkapi-object-kind function top">function</div>
+    <div class="mkapi-object-body function top"><code class="mkapi-object-name">limit_jobs</code><code class="mkapi-object-parenthesis">(</code><code class="mkapi-object-signature">limit</code><code class="mkapi-object-parenthesis">)</code></div>
+  </div>
+  
+</div>
+<div class="mkapi-docstring">
+<div class="mkapi-section">
+      <div class="mkapi-section-body"><p>Decorator to limit the number of concurrent calls to a coroutine function. Not thread-safe.</p></div>
+    </div>
+  <div class="mkapi-section parameters">
+      <div class="mkapi-section-name parameters">
+          <span class="mkapi-section-name-body parameters">Parameters</span> 
+        </div>
+      <div class="mkapi-section-body parameters"><ul class="mkapi-items">
+<li><code class="mkapi-item-name">limit</code>
+<span class="mkapi-item-type">(int)</span>
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">The maximum number of ongoing calls allowed at any time</span></li>
+
+
+</ul></div>
+    </div>
+  <div class="mkapi-section returns">
+      <div class="mkapi-section-name returns">
+          <span class="mkapi-section-name-body returns">Returns</span> <span class="mkapi-item-type">(callable(...: ))</span>
+        </div>
+      <div class="mkapi-section-body returns"><p>The given coroutine function with added concurrency protection</p></div>
+    </div>
+  <div class="mkapi-section raises">
+      <div class="mkapi-section-name raises">
+          <span class="mkapi-section-name-body raises">Raises</span> 
+        </div>
+      <div class="mkapi-section-body raises"><ul class="mkapi-items">
+<li><code class="mkapi-item-name">TooManyCalls</code>
+
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">The decorated function raises a dike.ToomanyCalls exception
+if it is called while already running <code>limit</code> times concurrently.</span></li>
+
+<li><code class="mkapi-item-name">ValueError</code>
+
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">If the decorator is applied to something else than an async def function</span></li>
+
+
+</ul></div>
+    </div>
+  <div class="mkapi-section">
+      <div class="mkapi-section-body"><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The decorator is not thread-safe, but only allows for concurrent access by async
+functions. The wrapped function may use multithreading, but only one thread at a time
+may call the function in order to avoid race conditions.</p>
+</div></div>
+    </div>
+  <div class="mkapi-section examples">
+      <div class="mkapi-section-name examples">
+          <span class="mkapi-section-name-body examples">Examples</span> 
+        </div>
+      <div class="mkapi-section-body examples"><div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">dike</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">httpx</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">dike</span>
+<span class="o">...</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nd">@dike</span><span class="o">.</span><span class="n">limit_jobs</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">...</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">web_request</span><span class="p">():</span>
+<span class="o">...</span>     <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+<span class="o">...</span>         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://httpstat.us/200?sleep=100&quot;</span><span class="p">)</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="n">response</span>
+<span class="o">...</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="o">...</span>     <span class="n">responses</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+<span class="o">...</span>         <span class="n">web_request</span><span class="p">(),</span> <span class="n">web_request</span><span class="p">(),</span> <span class="n">web_request</span><span class="p">(),</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span>
+<span class="o">...</span>     <span class="p">)</span>
+<span class="o">...</span>     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
+<span class="o">...</span>         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dike</span><span class="o">.</span><span class="n">_limit_jobs</span><span class="o">.</span><span class="n">TooManyCalls</span><span class="p">):</span>
+<span class="o">...</span>             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;too many calls&quot;</span><span class="p">)</span>
+<span class="o">...</span>         <span class="k">else</span><span class="p">:</span>
+<span class="o">...</span>             <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span> <span class="n">OK</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span> <span class="n">OK</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="n">too</span> <span class="n">many</span> <span class="n">calls</span>
+</code></pre></div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="mkapi-node" id="dike._retry.retry">
+<div class='mkapi-object-container'>
+  <div class="mkapi-object function code top">
+    <div class="mkapi-object-kind function top">function</div>
+    <div class="mkapi-object-body function top"><code class="mkapi-object-name">retry</code><code class="mkapi-object-parenthesis">(</code><code class="mkapi-object-signature">attempts=None</code>, <code class="mkapi-object-signature">exception_types=&lt;class &#39;Exception&#39;&gt;</code>, <code class="mkapi-object-signature">delay=None</code>, <code class="mkapi-object-signature">backoff=1</code>, <code class="mkapi-object-signature">log_exception_info=True</code><code class="mkapi-object-parenthesis">)</code></div>
+  </div>
+  
+</div>
+<div class="mkapi-docstring">
+<div class="mkapi-section">
+      <div class="mkapi-section-body"><p>Decorator to limit the number of concurrent calls to a coroutine function. Not thread-safe.</p></div>
+    </div>
+  <div class="mkapi-section parameters">
+      <div class="mkapi-section-name parameters">
+          <span class="mkapi-section-name-body parameters">Parameters</span> 
+        </div>
+      <div class="mkapi-section-body parameters"><ul class="mkapi-items">
+<li><code class="mkapi-item-name">attempts</code>
+<span class="mkapi-item-type">(int, optional)</span>
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">The maximum number of tries before re-raising the last exception. Per default
+there is no limit.</span></li>
+
+<li><code class="mkapi-item-name">exception_types</code>
+<span class="mkapi-item-type">(Union(type of baseexception, (type of baseexception)), optional)</span>
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">The exception types which allow a retry. In case of other exceptions
+there is no retry.</span></li>
+
+<li><code class="mkapi-item-name">delay</code>
+<span class="mkapi-item-type">(timedelta, optional)</span>
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">Delay between attempts. Per default there is no delay.</span></li>
+
+<li><code class="mkapi-item-name">backoff</code>
+<span class="mkapi-item-type">(int, optional)</span>
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">Multiplier applied to the delay between attempts. Per default this is <code>1</code>, so that
+the delay is constant and does not grow. E.g. use <code>2</code> to double the delay with each
+attempt.</span></li>
+
+<li><code class="mkapi-item-name">log_exception_info</code>
+<span class="mkapi-item-type">(bool, optional)</span>
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">Wether to include the exception stacktrace when logging any failed
+attempts. Default: True</span></li>
+
+
+</ul></div>
+    </div>
+  <div class="mkapi-section returns">
+      <div class="mkapi-section-name returns">
+          <span class="mkapi-section-name-body returns">Returns</span> <span class="mkapi-item-type">(callable(callable(...: ): callable(...: )))</span>
+        </div>
+      <div class="mkapi-section-body returns"><p>The given coroutine function with added exception handling and retry logic.</p></div>
+    </div>
+  <div class="mkapi-section raises">
+      <div class="mkapi-section-name raises">
+          <span class="mkapi-section-name-body raises">Raises</span> 
+        </div>
+      <div class="mkapi-section-body raises"><ul class="mkapi-items">
+<li><code class="mkapi-item-name">ValueError</code>
+
+<span class="mkapi-item-dash">&mdash;</span> <span class="mkapi-item-description">For invalid configuration arguments.</span></li>
+
+
+</ul></div>
+    </div>
+  <div class="mkapi-section examples">
+      <div class="mkapi-section-name examples">
+          <span class="mkapi-section-name-body examples">Examples</span> 
+        </div>
+      <div class="mkapi-section-body examples"><div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">httpx</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">dike</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nd">@dike</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">attempts</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">milliseconds</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="o">...</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">web_request</span><span class="p">():</span>
+<span class="o">...</span>     <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+<span class="o">...</span>         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://httpstat.us/400&quot;</span><span class="p">)</span>
+<span class="o">...</span>         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+<span class="o">...</span>             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Request failed!&quot;</span><span class="p">)</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="n">response</span>
+<span class="o">...</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="o">...</span>     <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">web_request</span><span class="p">()</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="o">...</span> <span class="c1"># Log messages from two attempts:</span>
+<span class="o">...</span> <span class="c1"># WARNING:dike:Caught exception RuntimeError(&#39;Request failed!&#39;). Retrying in 0.01s ...</span>
+<span class="o">...</span> <span class="c1"># Then:</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+    <span class="o">...</span>
+<span class="ne">RuntimeError</span><span class="p">:</span> <span class="n">Request</span> <span class="n">failed</span><span class="err">!</span>
+</code></pre></div></div>
+    </div>
+  </div>
+
+</div>
+
 <h2 id="exceptions">Exceptions</h2>
 <div class="mkapi-node" id="dike._limit_jobs.TooManyCalls">
 <div class='mkapi-object-container'>
@@ -363,29 +445,21 @@ max_processing_time</span></li>
 </div>
               
             </div>
-          </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../installation/" class="btn btn-neutral float-left" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../history/" class="btn btn-neutral float-right" title="History">Next <span class="icon icon-circle-arrow-right"></span></a>
-      
-      
-        <a href="../installation/" class="btn btn-neutral" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-      
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <!-- Copyright etc -->
-    
   </div>
 
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-      
+          
         </div>
       </div>
 
@@ -393,7 +467,7 @@ max_processing_time</span></li>
 
   </div>
 
-  <div class="rst-versions" role="note" aria-label="versions">
+  <div class="rst-versions" role="note" aria-label="Versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
