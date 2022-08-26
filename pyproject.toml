@@ -60,7 +60,7 @@ mkdocs = { version = "^1.0.0" }
 mkdocs-autorefs = { version = "*" }
 mkdocs-include-markdown-plugin = { version = "*" }
 mkapi = { version = "*" }
-pip = { version = "^20.3.1" }
+pip = { version = "^22.0.0" }
 pre-commit = { version = "^2.12.0" }
 pytest = "^7.1.2"
 pytest-cov = { version = "*" }
