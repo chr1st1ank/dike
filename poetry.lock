@@ -1248,7 +1248,7 @@ test = []
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<4.0"
-content-hash = "26897454017d6c45a353b43a916fbf008bc406a7775f4ec23c6d7fb430c8251b"
+content-hash = "864f0ca80523bf8afc11a1585003266245cc28f9711209adcb5aa549a081f06b"
 
 [metadata.files]
 anyio = [
