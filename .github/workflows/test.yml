@@ -60,7 +60,7 @@ jobs:
         if: ${{ matrix.publish-results && always() }}
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
         with:
-          files: pytest.xml
+          junit_files: pytest.xml
 
       - uses: codecov/codecov-action@v3
         if: ${{ matrix.publish-results && always() }}
