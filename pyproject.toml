@@ -75,7 +75,7 @@ numpy = "^1.21"
 pytest-parametrized = "^1.4"
 httpx = "^0.23"
 fastapi = {version = "^0.85"}
-uvicorn = "^0.18"
+uvicorn = "^0.19"
 phmdoctest = "^1.2"
 invoke = "^1.7"
 bump2version = "^1.0"
