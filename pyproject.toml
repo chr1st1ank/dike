@@ -49,7 +49,8 @@ black = { version = "*" }
 bump2version = "^1.0"
 fastapi = {version = "^0.88"}
 flake8 = { version = "*" }
-httpx = "^0.23"
+httpcore = "^0.16.2"
+httpx = "^0.23.1"
 invoke = "^1.7"
 isort = { version = "*" }
 mkapi = { version = "*" }
@@ -81,6 +82,10 @@ mkdocs = "^1.4.1"
 mkdocs-include-markdown-plugin = { version = "^4.0.0", python = "3.9" }
 mkapi = "^1.0.14"
 mkdocs-autorefs = "^0.4.1"
+
+
+[tool.poetry.group.test.dependencies]
+xdoctest = "^1.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
