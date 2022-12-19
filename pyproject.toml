@@ -57,7 +57,7 @@ mkapi = { version = "*" }
 mkdocs = { version = "^1.4" }
 mkdocs-autorefs = { version = "*" }
 mkdocs-include-markdown-plugin = { version = "*" }
-numpy = "~1.24"
+numpy = "~1.21"
 phmdoctest = "^1.2"
 pip = { version = "*" }
 pre-commit = { version = "^2.20" }
