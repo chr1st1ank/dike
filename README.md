@@ -90,10 +90,7 @@ async def main():
     responses = await asyncio.gather(call1, call2, call3, return_exceptions=True)
     # Print the responses
     for r in responses:
-        if isinstance(r, dike.TooManyCalls):
-            print("too many calls")
-        else:
-            print(r)
+        print(r)
 
 
 asyncio.run(main())
@@ -103,7 +100,7 @@ The output shows that the first two requests succeed. The third one hits the con
 ```
 <Response [200 OK]>
 <Response [200 OK]>
-too many calls
+Too many calls to function web_request! limit=2 exceeded
 ```
 
 ### Mini-batching for asynchronous function calls
