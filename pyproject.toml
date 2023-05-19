@@ -51,7 +51,7 @@ fastapi = {version = "^0.88"}
 flake8 = { version = "*" }
 httpcore = "^0.16.2"
 httpx = "^0.23.1"
-invoke = "^1.7"
+invoke = "^2.0.0"
 isort = { version = "*" }
 mkapi = { version = "*" }
 mkdocs = { version = "^1.4" }
