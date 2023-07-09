@@ -6,7 +6,7 @@ homepage = "https://github.com/chr1st1ank/dike"
 description = "Python asyncio tools for web service resilience."
 authors = ["Christian Krudewig <chr1st1ank@krudewig-online.de>"]
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "Apache-2.0"
 classifiers = [
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
@@ -51,7 +51,7 @@ fastapi = {version = "^0.88"}
 flake8 = { version = "*" }
 httpcore = "^0.16.2"
 httpx = "^0.23.1"
-invoke = "^2.0.0"
+invoke = "^1.7"
 isort = { version = "*" }
 mkapi = { version = "*" }
 mkdocs = { version = "^1.4" }
