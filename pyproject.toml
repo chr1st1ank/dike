@@ -79,7 +79,7 @@ optional = true
 [tool.poetry.group.doc.dependencies]
 pymdown-extensions = "^9.7"
 mkdocs = "^1.4.1"
-mkdocs-include-markdown-plugin = { version = "^4.0.0", python = "3.9" }
+mkdocs-include-markdown-plugin = { version = "^5.0.0", python = "3.9" }
 mkapi = "^1.0.14"
 mkdocs-autorefs = "^0.4.1"
 
