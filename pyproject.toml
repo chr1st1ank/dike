@@ -77,7 +77,7 @@ pylint = {version = "^2.15.5", python = "^3.9"}
 optional = true
 
 [tool.poetry.group.doc.dependencies]
-pymdown-extensions = "^9.7"
+pymdown-extensions = "^10.0.0"
 mkdocs = "^1.4.1"
 mkdocs-include-markdown-plugin = { version = "^4.0.0", python = "3.9" }
 mkapi = "^1.0.14"
