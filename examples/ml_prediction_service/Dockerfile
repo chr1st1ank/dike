@@ -7,10 +7,11 @@
 # Load test with github.com/codesenberg/bombardier:
 #   bombardier -c 25 -r 300 -d 10s -l 'localhost:8000/predict?number=5'
 
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
 
 RUN pip install dike numpy
 COPY api.py /app/api.py
 
 EXPOSE 8000
+USER 1000
 CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
