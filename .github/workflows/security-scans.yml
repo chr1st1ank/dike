@@ -1,8 +1,9 @@
 name: Security scans
 on:
   schedule:
-      - "15 12 * * *"
+      - cron: "15 12 * * *"
   pull_request:
+  workflow_dispatch:
 jobs:
   build:
     name: Trivy repository scan
