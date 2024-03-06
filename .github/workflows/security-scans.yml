@@ -1,10 +1,8 @@
 name: Security scans
 on:
-  push:
-    branches:
-      - main
-      - feat/standard-scans
-#  pull_request:
+  schedule:
+      - "15 12 * * *"
+  pull_request:
 jobs:
   build:
     name: Trivy repository scan
