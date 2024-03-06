@@ -37,7 +37,7 @@ def limit_jobs(*, limit: int) -> Callable[..., Coroutine[Any, Any, Any]]:
         >>> @dike.limit_jobs(limit=2)
         ... async def web_request():
         ...     async with httpx.AsyncClient() as client:
-        ...         response = await client.get("https://httpstat.us/200?sleep=100")
+        ...         response = await client.get("https://httpbin.org/status/200?sleep=100")
         ...     return response
         ...
         ...

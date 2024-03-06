@@ -46,7 +46,7 @@ def retry(
         >>> @dike.retry(attempts=2, delay=datetime.timedelta(milliseconds=10))
         ... async def web_request():
         ...     async with httpx.AsyncClient() as client:
-        ...         response = await client.get("https://httpstat.us/400")
+        ...         response = await client.get("https://httpbin.org/status/400")
         ...         if response.status_code != httpx.codes.OK:
         ...             raise RuntimeError("Request failed!")
         ...     return response

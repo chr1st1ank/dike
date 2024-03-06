@@ -78,7 +78,7 @@ import httpx
 async def web_request():
     """Sends a slow web request"""
     async with httpx.AsyncClient() as client:
-        response = await client.get("https://httpstat.us/200?sleep=100")
+        response = await client.get("https://httpbin.org/status/200?sleep=100")
     return response
 
 
