@@ -47,7 +47,7 @@ optional = true
 [tool.poetry.group.dev.dependencies]
 black = { version = "*" }
 bump2version = "^1.0"
-fastapi = {version = "^0.88"}
+fastapi = {version = "^0.109.0"}
 flake8 = { version = "*" }
 httpcore = "^0.16.2"
 httpx = "^0.23.1"
