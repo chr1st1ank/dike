@@ -114,7 +114,12 @@ def batch(  # noqa: PLR0915, C901
         @functools.wraps(func)
         async def batching_call(*args, **kwargs):
             """This is the actual wrapper function which controls the process."""
-            nonlocal results, num_results_ready, result_ready_events, call_args_queue, n_rows_in_queue
+            nonlocal \
+                results, \
+                num_results_ready, \
+                result_ready_events, \
+                call_args_queue, \
+                n_rows_in_queue
 
             with enqueue(args, kwargs) as (my_batch_no, start_index, stop_index):
                 await wait_for_calculation(my_batch_no)

@@ -7,6 +7,7 @@ Simple load test with github.com/codesenberg/bombardier:
 
     bombardier -c 25 -r 300 -d 10s -l 'localhost:8000/predict?number=5'
 """
+
 import asyncio
 import concurrent
 import random
