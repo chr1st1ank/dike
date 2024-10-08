@@ -62,7 +62,7 @@ jobs:
           pip install poetry tox tox-gh-actions
           poetry install --with test,dev,doc
 
-      - name: Lint and test with tox
+      - name: Test with tox
         if: ${{ matrix.tox-full-run }}
         run:
           poetry run tox
