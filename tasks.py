@@ -7,7 +7,7 @@ import platform
 import webbrowser
 from pathlib import Path
 
-from invoke import call, task
+from invoke import task
 from invoke.context import Context
 from invoke.runners import Result
 
@@ -101,37 +101,6 @@ def format_(c, check=False):
 
 
 @task()
-def flake8(c):
-    # type: (Context) -> None
-    """Run flake8."""
-    _run(c, f"poetry run flakehell lint {PYTHON_TARGETS_STR}")
-
-
-@task()
-def safety(c):
-    # type: (Context) -> None
-    """Run safety."""
-    _run(
-        c,
-        "poetry export --dev --format=requirements.txt --without-hashes | "
-        "poetry run safety check --stdin --full-report",
-    )
-
-
-@task(pre=[flake8, safety, call(format_, check=True)])
-def lint(c):
-    # type: (Context) -> None
-    """Run all linting."""
-
-
-@task()
-def mypy(c):
-    # type: (Context) -> None
-    """Run mypy."""
-    _run(c, "poetry run mypy dike")
-
-
-@task()
 def tests(c):
     # type: (Context) -> None
     """Run tests."""
@@ -162,7 +131,7 @@ def docs(c):
     _run(c, "poetry run mkdocs build")
 
 
-@task(pre=[clean, hooks, mypy, docs, safety, tests, coverage])
+@task(pre=[clean, hooks, docs, tests, coverage])
 def check(c):
     # type: (Context) -> None
     """Run all checks together."""
