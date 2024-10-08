@@ -1,4 +1,5 @@
-"""Implementation of the @dike.batch decorator"""
+"""Implementation of the @dike.batch decorator."""
+
 import asyncio
 import functools
 from contextlib import contextmanager
@@ -11,8 +12,7 @@ except ImportError:
 
 
 # Deactivate mccabe's complexity warnings which doesn't like closures
-# flake8: noqa: C901
-def batch(
+def batch(  # noqa: PLR0915, C901
     *,
     target_batch_size: int,
     max_waiting_time: float,
@@ -20,9 +20,10 @@ def batch(
     argument_type: str = "list",
 ) -> Callable[[Callable[..., Coroutine[Any, Any, Any]]], Callable[..., Coroutine[Any, Any, Any]]]:
     """@batch is a decorator to cumulate function calls and process them in batches.
-        Not thread-safe.
 
-    The function to wrap must have arguments of type list or numpy.array which can be aggregated.
+    Not thread-safe.
+
+    The function to wrap must have arguments of type list or `numpy.array` which can be aggregated.
     It must return just a single value of the same type. The type has to be specified with the
     `argument_type` parameter of the decorator.
 
@@ -102,7 +103,7 @@ def batch(
     if argument_type == "numpy" and np is None:
         raise ValueError('Unable to use "numpy" as argument_type because numpy is not available')
 
-    def decorator(func):
+    def decorator(func):  # noqa: C901, PLR0915
         next_free_batch: int = 0
         call_args_queue: List[Tuple[List, Dict]] = []
         n_rows_in_queue: int = 0
@@ -112,8 +113,13 @@ def batch(
 
         @functools.wraps(func)
         async def batching_call(*args, **kwargs):
-            """This is the actual wrapper function which controls the process"""
-            nonlocal results, num_results_ready, result_ready_events, call_args_queue, n_rows_in_queue
+            """This is the actual wrapper function which controls the process."""
+            nonlocal \
+                results, \
+                num_results_ready, \
+                result_ready_events, \
+                call_args_queue, \
+                n_rows_in_queue
 
             with enqueue(args, kwargs) as (my_batch_no, start_index, stop_index):
                 await wait_for_calculation(my_batch_no)
@@ -121,7 +127,7 @@ def batch(
 
         @contextmanager
         def enqueue(args, kwargs) -> (int, int, int):
-            """Add call arguments to queue and get the batch number and result indices"""
+            """Add call arguments to queue and get the batch number and result indices."""
             batch_no = next_free_batch
             if batch_no not in result_ready_events:
                 result_ready_events[batch_no] = asyncio.Event()
@@ -132,7 +138,7 @@ def batch(
                 remove_result(batch_no)
 
         def add_args_to_queue(args, kwargs):
-            """Add a new argument vector to the queue and return result indices"""
+            """Add a new argument vector to the queue and return result indices."""
             nonlocal call_args_queue, n_rows_in_queue
 
             if call_args_queue and (
@@ -155,7 +161,7 @@ def batch(
             return offset, n_rows_in_queue
 
         async def wait_for_calculation(batch_no_to_calculate):
-            """Pause until the result becomes available or trigger the calculation on timeout"""
+            """Pause until the result becomes available or trigger the calculation on timeout."""
             if n_rows_in_queue >= target_batch_size:
                 await calculate(batch_no_to_calculate)
             else:
@@ -173,20 +179,20 @@ def batch(
                         )
 
         async def calculate(batch_no_to_calculate):
-            """Call the decorated coroutine with batched arguments"""
+            """Call the decorated coroutine with batched arguments."""
             nonlocal results, call_args_queue, num_results_ready
             if next_free_batch == batch_no_to_calculate:
                 n_results = len(call_args_queue)
                 args, kwargs = pop_args_from_queue()
                 try:
                     results[batch_no_to_calculate] = await func(*args, **kwargs)
-                except Exception as e:  # pylint: disable=broad-except
+                except Exception as e:  # pylint: disable=broad-except  # noqa: BLE001
                     results[batch_no_to_calculate] = e
                 num_results_ready[batch_no_to_calculate] = n_results
                 result_ready_events[batch_no_to_calculate].set()
 
         def pop_args_from_queue():
-            """Get all collected arguments from the queue as batch"""
+            """Get all collected arguments from the queue as batch."""
             nonlocal next_free_batch, call_args_queue, n_rows_in_queue
 
             n_args = len(call_args_queue[0][0])
@@ -215,7 +221,7 @@ def batch(
             return args, kwargs
 
         def get_results(start_index: int, stop_index: int, batch_no):
-            """Pop the results for a certain index range from the output buffer"""
+            """Pop the results for a certain index range from the output buffer."""
             nonlocal results
 
             if isinstance(results[batch_no], Exception):
@@ -225,7 +231,7 @@ def batch(
             return results_to_return
 
         def remove_result(batch_no):
-            """Reduce reference count to output buffer and eventually delete it"""
+            """Reduce reference count to output buffer and eventually delete it."""
             nonlocal num_results_ready, result_ready_events, results
 
             if num_results_ready[batch_no] == 1:

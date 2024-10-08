@@ -1,11 +1,12 @@
-"""Implementation of the @dike.limit_jobs decorator"""
+"""Implementation of the @dike.limit_jobs decorator."""
+
 import functools
 import inspect
 from typing import Any, Callable, Coroutine
 
 
-class TooManyCalls(Exception):
-    """Error raised by @limit_jobs when a call exceeds the preset limit"""
+class TooManyCalls(Exception):  # noqa: N818
+    """Error raised by @limit_jobs when a call exceeds the preset limit."""
 
 
 def limit_jobs(*, limit: int) -> Callable[..., Coroutine[Any, Any, Any]]:
@@ -63,7 +64,7 @@ def limit_jobs(*, limit: int) -> Callable[..., Coroutine[Any, Any, Any]]:
 
     def decorator(func):
         if not inspect.iscoroutinefunction(func):
-            raise ValueError(f"Error when wrapping {str(func)}. Only coroutines can be wrapped!")
+            raise ValueError(f"Error when wrapping {func!s}. Only coroutines can be wrapped!")
 
         @functools.wraps(func)
         async def limited_call(*args, **kwargs):

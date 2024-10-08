@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.9", "3.10"]
         exclude:
           # No numpy wheels yet:
           - os: windows-latest
@@ -62,7 +62,7 @@ jobs:
           pip install poetry tox tox-gh-actions
           poetry install --with test,dev,doc
 
-      - name: Lint and test with tox
+      - name: Test with tox
         if: ${{ matrix.tox-full-run }}
         run:
           poetry run tox
@@ -77,10 +77,11 @@ jobs:
         with:
           junit_files: pytest.xml
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         if: ${{ matrix.publish-results && always() }}
         with:
           fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml
 
   publish_dev_build:

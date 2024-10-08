@@ -5,7 +5,7 @@ ci:
   submodules: false
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.4.0
+  rev: v5.0.0
   hooks:
   - id: check-merge-conflict
   - id: check-json
@@ -14,17 +14,9 @@ repos:
     args: [--unsafe]
   - id: debug-statements
   - id: end-of-file-fixer
-- repo: https://github.com/pre-commit/mirrors-isort
-  rev: v5.10.1
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.6.9
   hooks:
-  - id: isort
-- repo: https://github.com/ambv/black
-  rev: 22.10.0
-  hooks:
-  - id: black
-    language_version: python3.9
-- repo: https://github.com/pycqa/flake8
-  rev: 6.0.0
-  hooks:
-  - id: flake8
-    additional_dependencies: [flake8-typing-imports==1.14.0]
+    - id: ruff
+      args: [ --fix ]
+    - id: ruff-format
