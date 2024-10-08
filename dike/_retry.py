@@ -1,19 +1,20 @@
-"""Implementation of the @dike.retry decorator"""
+"""Implementation of the @dike.retry decorator."""
+
 import asyncio
 import datetime
 import functools
 import inspect
 import logging
-from typing import Awaitable, Callable, Tuple, Type, Union
+from typing import Awaitable, Callable, Optional, Tuple, Type, Union
 
 logger = logging.getLogger("dike")
 
 
 def retry(
     *,
-    attempts: int = None,
+    attempts: Optional[int] = None,
     exception_types: Union[Type[BaseException], Tuple[Type[BaseException]]] = Exception,
-    delay: datetime.timedelta = None,
+    delay: Optional[datetime.timedelta] = None,
     backoff: int = 1,
     log_exception_info: bool = True,
 ) -> Callable[[Callable[..., Awaitable]], Callable[..., Awaitable]]:
@@ -70,7 +71,7 @@ def retry(
 
     def decorator(func: Callable[..., Awaitable]) -> Callable[..., Awaitable]:
         if not inspect.iscoroutinefunction(func):
-            raise ValueError(f"Error when wrapping {str(func)}. Only coroutines can be wrapped!")
+            raise ValueError(f"Error when wrapping {func!s}. Only coroutines can be wrapped!")
 
         @functools.wraps(func)
         async def guarded_call(*args, **kwargs):
@@ -86,7 +87,7 @@ def retry(
                     if not counter:
                         raise
                     logger.warning(
-                        f"Caught exception {repr(e)}. Retrying in {next_delay:.3g}s ...",
+                        f"Caught exception {e!r}. Retrying in {next_delay:.3g}s ...",
                         exc_info=log_exception_info,
                     )
                     await asyncio.sleep(next_delay)

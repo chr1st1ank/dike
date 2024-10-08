@@ -1,4 +1,5 @@
-"""Tests for for the decorator dike.batch"""
+"""Tests for for the decorator dike.batch."""
+
 # pylint: disable=missing-function-docstring
 import asyncio
 import importlib
@@ -13,16 +14,18 @@ import dike
 
 
 def exceptions_equal(exception1, exception2):
-    """Returns True if the exceptions have the same type and message"""
+    """Returns True if the exceptions have the same type and message."""
     # pylint: disable=unidiomatic-typecheck
-    return type(exception1) == type(exception2) and str(exception1) == str(exception2)
+    return (type(exception1) is type(exception2)) and str(exception1) == str(exception2)
 
 
 async def raise_error(message):
     raise RuntimeError(message)
 
 
-@pytest.mark.parametrize("argtype_converter, arg_type_name", [(list, "list"), (np.array, "numpy")])
+@pytest.mark.parametrize(
+    ("argtype_converter", "arg_type_name"), [(list, "list"), (np.array, "numpy")]
+)
 def test_single_items_batchsize_reached(argtype_converter, arg_type_name):
     @dike.batch(target_batch_size=3, max_waiting_time=10, argument_type=arg_type_name)
     async def f(arg1, arg2):
@@ -46,7 +49,9 @@ def test_single_items_batchsize_reached(argtype_converter, arg_type_name):
     asyncio.run(run_test())
 
 
-@pytest.mark.parametrize("argtype_converter, arg_type_name", [(list, "list"), (np.array, "numpy")])
+@pytest.mark.parametrize(
+    ("argtype_converter", "arg_type_name"), [(list, "list"), (np.array, "numpy")]
+)
 def test_single_items_kwargs_batchsize_reached(argtype_converter, arg_type_name):
     @dike.batch(target_batch_size=3, max_waiting_time=10, argument_type=arg_type_name)
     async def f(arg1, arg2):
@@ -70,7 +75,9 @@ def test_single_items_kwargs_batchsize_reached(argtype_converter, arg_type_name)
     asyncio.run(run_test())
 
 
-@pytest.mark.parametrize("argtype_converter, arg_type_name", [(list, "list"), (np.array, "numpy")])
+@pytest.mark.parametrize(
+    ("argtype_converter", "arg_type_name"), [(list, "list"), (np.array, "numpy")]
+)
 def test_single_items_mixed_kwargs_raises_value_error(argtype_converter, arg_type_name):
     @dike.batch(target_batch_size=3, max_waiting_time=0.01, argument_type=arg_type_name)
     async def f(arg1, arg2):
@@ -256,7 +263,7 @@ def test_upstream_exception_is_propagated_to_all_callers():
 
 
 def test_concurrent_calculations_do_not_clash():
-    """Run many calculations in parallel and see if the results are always correct"""
+    """Run many calculations in parallel and see if the results are always correct."""
 
     @dike.batch(target_batch_size=3, max_waiting_time=0.01)
     async def f(arg):
@@ -266,7 +273,7 @@ def test_concurrent_calculations_do_not_clash():
     async def do_n_calculations(n):
         for _ in range(n):
             number = random.randint(0, 2**20)
-            result = await (f([number]))
+            result = await f([number])
             assert result[0] == number * 2
 
             await asyncio.sleep(random.random() / 10.0)
@@ -278,7 +285,7 @@ def test_concurrent_calculations_do_not_clash():
 
 
 def test_no_numpy_available(monkeypatch):
-    """Test if without numpy the decorator works normally but refuses to use numpy"""
+    """Test if without numpy the decorator works normally but refuses to use numpy."""
     monkeypatch.setitem(sys.modules, "numpy", None)
     importlib.reload(dike._batch)  # pylint: disable=protected-access
 

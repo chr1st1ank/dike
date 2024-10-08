@@ -1,4 +1,5 @@
-"""Tests for the dike.wrap_in_coroutine decorator"""
+"""Tests for the dike.wrap_in_coroutine decorator."""
+
 # pylint: disable=missing-function-docstring
 import asyncio
 
@@ -6,7 +7,7 @@ from dike import wrap_in_coroutine
 
 
 def test_wrap_function():
-    """Wrap a function without arguments"""
+    """Wrap a function without arguments."""
 
     @wrap_in_coroutine
     def f():
@@ -16,7 +17,7 @@ def test_wrap_function():
 
 
 def test_wrap_function_args():
-    """Wrap a function with positional arguments"""
+    """Wrap a function with positional arguments."""
 
     @wrap_in_coroutine
     def f(*args):
@@ -26,17 +27,17 @@ def test_wrap_function_args():
 
 
 def test_wrap_function_kargs():
-    """Wrap a function with keyword arguments"""
+    """Wrap a function with keyword arguments."""
 
     @wrap_in_coroutine
     def f(**kwargs):
         return kwargs
 
-    assert asyncio.run(f(a="A", b=2)) == dict(a="A", b=2)
+    assert asyncio.run(f(a="A", b=2)) == {"a": "A", "b": 2}
 
 
 def test_wrap_coroutine():
-    """Wrap a coroutine without arguments"""
+    """Wrap a coroutine without arguments."""
 
     @wrap_in_coroutine
     async def f():
@@ -46,7 +47,7 @@ def test_wrap_coroutine():
 
 
 def test_wrap_coroutine_args():
-    """Wrap a coroutine with positional arguments"""
+    """Wrap a coroutine with positional arguments."""
 
     @wrap_in_coroutine
     async def f(*args):
@@ -56,10 +57,10 @@ def test_wrap_coroutine_args():
 
 
 def test_wrap_coroutine_kargs():
-    """Wrap a coroutine with keyword arguments"""
+    """Wrap a coroutine with keyword arguments."""
 
     @wrap_in_coroutine
     async def f(**kwargs):
         return kwargs
 
-    assert asyncio.run(f(a="A", b=2)) == dict(a="A", b=2)
+    assert asyncio.run(f(a="A", b=2)) == {"a": "A", "b": 2}

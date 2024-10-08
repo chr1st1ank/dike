@@ -1,4 +1,5 @@
-"""Tests for the dike.limit_jobs decorator"""
+"""Tests for the dike.limit_jobs decorator."""
+
 # pylint: disable=missing-function-docstring
 import asyncio
 import re
@@ -13,14 +14,14 @@ concurrency_limit = parametrized.fixture(3, 1, 0, -1, 1.5)
 
 @dike.limit_jobs(limit=2)
 async def block_until_released(event: asyncio.Event, arg):
-    """Blocks until the given event is sent and then returns arg"""
+    """Blocks until the given event is sent and then returns arg."""
     await event.wait()
     return arg
 
 
 @pytest.mark.parametrize("job_limit", [1, 2, 3, 2.5, float("inf")])
 def test_simple_usage(job_limit):
-    """Simply wrap a coroutine with different limits and call it once"""
+    """Simply wrap a coroutine with different limits and call it once."""
 
     @dike.limit_jobs(limit=job_limit)
     async def f():
@@ -30,7 +31,7 @@ def test_simple_usage(job_limit):
 
 
 def test_single_calls():
-    """Try single calls to the wrapped function"""
+    """Try single calls to the wrapped function."""
 
     async def testloop():
         for i in range(4):
@@ -42,7 +43,7 @@ def test_single_calls():
 
 
 def test_calls_below_limit():
-    """Some simultaneous calls below the threshold should be processed normally"""
+    """Some simultaneous calls below the threshold should be processed normally."""
 
     async def testloop():
         event = asyncio.Event()
@@ -58,7 +59,7 @@ def test_calls_below_limit():
 
 
 def test_calls_exceeding_limit():
-    """Too many simultaneous calls should raise a TooManyCalls exception"""
+    """Too many simultaneous calls should raise a TooManyCalls exception."""
 
     async def testloop():
         event = asyncio.Event()
@@ -77,7 +78,7 @@ def test_calls_exceeding_limit():
 
 
 def test_call_with_limit_0():
-    """Limit of 0 is allowed to create a "forbidden" call"""
+    """Limit of 0 is allowed to create a "forbidden" call."""
 
     @dike.limit_jobs(limit=0)
     async def f():
@@ -89,7 +90,7 @@ def test_call_with_limit_0():
 
 @pytest.mark.parametrize("job_limit", [-1, -1.5, float("-inf")])
 def test_unlogical_limits_give_clear_error(job_limit):
-    """Ensure that a proper error message is shown when trying to set strange limits"""
+    """Ensure that a proper error message is shown when trying to set strange limits."""
     with pytest.raises(ValueError, match=re.escape("Error when wrapping f(). Limit must be >= 0")):
 
         @dike.limit_jobs(limit=job_limit)
@@ -98,7 +99,7 @@ def test_unlogical_limits_give_clear_error(job_limit):
 
 
 def test_function_instead_coroutine():
-    """Ensure that a proper error message is shown when trying to wrap a blocking function"""
+    """Ensure that a proper error message is shown when trying to wrap a blocking function."""
     with pytest.raises(ValueError, match="Error when wrapping .+ Only coroutines can be wrapped"):
 
         @dike.limit_jobs(limit=5)
