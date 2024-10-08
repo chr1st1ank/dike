@@ -77,10 +77,11 @@ jobs:
         with:
           junit_files: pytest.xml
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         if: ${{ matrix.publish-results && always() }}
         with:
           fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml
 
   publish_dev_build:
