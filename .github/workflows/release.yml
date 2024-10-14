@@ -64,7 +64,7 @@ jobs:
       - name: Install dependencies
         if: ${{ !matrix.tox-full-run }}
         run: |
-          uv tool install --with tox-gh-actions tox
+          uv venv .venv
           uv pip install '.'
 
       - name: Build documentation
