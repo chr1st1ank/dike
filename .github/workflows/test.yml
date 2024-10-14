@@ -49,21 +49,13 @@ jobs:
         uses: astral-sh/setup-uv@v3
 
       - name: Install dependencies
-        if: ${{ !matrix.tox-full-run }}
         run: |
           uv tool install --with tox-gh-actions --with tox-uv tox
-          uv pip install '.[test]'
 
       - name: Test with tox
         if: ${{ !matrix.tox-full-run }}
         run:
           tox -e test
-
-      - name: Install dependencies
-        if: ${{ matrix.tox-full-run }}
-        run: |
-          uv tool install --with tox-gh-actions tox
-          uv pip install '.[test,dev,doc]'
 
       - name: Test with tox
         if: ${{ matrix.tox-full-run }}
