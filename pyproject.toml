@@ -51,7 +51,7 @@ dev = [
     'mkdocs-include-markdown-plugin',
     'numpy ~= 1.21',
     'phmdoctest ~= 1.2',
-    'pre-commit ~= 2.20',
+    'pre-commit ~=4.0',
     'pytest ~= 7.1',
     'pytest-cov',
     'pytest-parametrized ~= 1.4',
