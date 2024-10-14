@@ -13,6 +13,10 @@ The project uses semantic versioning.
 
 ## [Unreleased]
 
+## [1.0.1] - 2024-10-15
+### Changed:
+* Updates of dependencies and change of build tool to uv
+
 ## [1.0.0] - 2022-05-09
 ### Added:
 * Package API declared stable.

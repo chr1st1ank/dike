@@ -1,6 +1,6 @@
 [project]
 name = "dike"
-version = "1.0.0"
+version = "1.0.1"
 description = "Python asyncio tools for web service resilience."
 authors = [
     { name = "Christian Krudewig", email = "chr1st1ank@krudewig-online.de" },
