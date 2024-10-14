@@ -67,7 +67,7 @@ doc = [
     'mkdocs ~= 1.4',
     'mkdocs-include-markdown-plugin ~= 4.0; python_version == "3.9"',
     'mkapi ~= 1.0',
-    'mkdocs-autorefs ~= 0.4',
+    'mkdocs-autorefs ~=1.2',
 ]
 
 [build-system]
