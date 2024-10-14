@@ -45,30 +45,30 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
 
       - name: Install dependencies
         if: ${{ !matrix.tox-full-run }}
         run: |
-          python -m pip install --upgrade pip
-          pip install poetry tox tox-gh-actions
-          poetry install --with test
+          uv tool install --with tox-gh-actions tox
+          uv pip install '.[test]'
 
       - name: Test with tox
         if: ${{ !matrix.tox-full-run }}
         run:
-          poetry run tox -e test
+          uv run tox -e test
 
       - name: Install dependencies
         if: ${{ matrix.tox-full-run }}
         run: |
-          python -m pip install --upgrade pip
-          pip install poetry tox tox-gh-actions
-          poetry install --with test,dev,doc
+          uv tool install --with tox-gh-actions tox
+          uv pip install '.[test,dev,doc]'
 
       - name: Test with tox
         if: ${{ matrix.tox-full-run }}
         run:
-          poetry run tox
+          uv run tox
 
       - name: list files
         if: ${{ always() }}
@@ -96,21 +96,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3.9
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry
-          poetry install
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
 
       - name: list files
         run: ls -l .
 
       - name: Build wheels and source tarball
         run: |
-          poetry version $(poetry version --short)-dev.$GITHUB_RUN_NUMBER
-          poetry version --short
-          poetry build
+          uv build
 
       - name: publish to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
