@@ -1,9 +1,10 @@
 [project]
 name = "dike"
 version = "1.0.0"
-homepage = "https://github.com/chr1st1ank/dike"
 description = "Python asyncio tools for web service resilience."
-authors = [{ name = "Christian Krudewig", email = "chr1st1ank@krudewig-online.de" }]
+authors = [
+    { name = "Christian Krudewig", email = "chr1st1ank@krudewig-online.de" },
+]
 readme = "README.md"
 license = "Apache-2.0"
 classifiers = [
@@ -21,53 +22,47 @@ classifiers = [
     'Programming Language :: Python :: 3.12',
     'Programming Language :: Python :: 3.13',
     'Operating System :: OS Independent',
-    'Framework :: AsyncIO'
-]
-packages = [
-    { include = "dike" },
-    { include = "tests", format = "sdist" },
+    'Framework :: AsyncIO',
 ]
 requires-python = ">=3.7.1,<4.0"
 dependencies = []
 
+[project.urls]
+Homepage = "https://github.com/chr1st1ank/dike"
+Documentation = "https://chr1st1ank.github.io/dike/"
+Repository = "https://github.com/chr1st1ank/dike.git"
+Issues = "https://github.com/chr1st1ank/dike/issues"
+
 [project.optional-dependencies]
-test = [
-    "pytest",
-    "phmdoctest",
-    "pytest-cov",
-    "yamllint",
-    "xdoctest~=1.1"
-]
+test = ["pytest", "phmdoctest", "pytest-cov", "yamllint", "xdoctest~=1.1"]
 dev = [
     'docutils; python_version == "3.9"',
     'bump2version ~= 1.0',
     'fastapi ~= 0.88',
-    'httpcore ~= 0.16',
     'httpx ~= 0.23',
     'invoke ~= 2.0.0',
     'mkapi',
     'mkdocs ~= 1.4',
     'mkdocs-autorefs',
     'mkdocs-include-markdown-plugin',
-    'numpy ~= 1.21',
+    'numpy',
     'phmdoctest ~= 1.2',
     'pre-commit ~= 2.20',
     'pytest ~= 7.1',
     'pytest-cov',
     'pytest-parametrized ~= 1.4',
-    'safety ~= 2.3',
     'toml',
     'tox',
     'twine',
     'uvicorn ~= 0.20',
-    'yamllint'
+    'yamllint',
 ]
 doc = [
     'pymdown-extensions ~= 9.7',
     'mkdocs ~= 1.4',
     'mkdocs-include-markdown-plugin ~= 4.0; python_version == "3.9"',
     'mkapi ~= 1.0',
-    'mkdocs-autorefs ~= 0.4',
+    'mkdocs-autorefs',
 ]
 
 [build-system]
