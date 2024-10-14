@@ -77,17 +77,10 @@ def clean(c):
 
 
 @task()
-def install_hooks(c):
-    # type: (Context) -> None
-    """Install pre-commit hooks."""
-    _run(c, "poetry run pre-commit install")
-
-
-@task()
 def hooks(c):
     # type: (Context) -> None
     """Run pre-commit hooks."""
-    _run(c, "poetry run pre-commit run --all-files")
+    _run(c, "pre-commit run --all-files")
 
 
 @task(name="format", help={"check": "Checks if source is formatted without applying changes"})
@@ -95,9 +88,9 @@ def format_(c, check=False):
     # type: (Context, bool) -> None
     """Format code."""
     isort_options = ["--check-only", "--diff"] if check else []
-    _run(c, f"poetry run isort {' '.join(isort_options)} {PYTHON_TARGETS_STR}")
+    _run(c, f"uv run isort {' '.join(isort_options)} {PYTHON_TARGETS_STR}")
     black_options = ["--diff", "--check"] if check else ["--quiet"]
-    _run(c, f"poetry run black {' '.join(black_options)} {PYTHON_TARGETS_STR}")
+    _run(c, f"uv run black {' '.join(black_options)} {PYTHON_TARGETS_STR}")
 
 
 @task()
@@ -105,7 +98,7 @@ def tests(c):
     # type: (Context) -> None
     """Run tests."""
     pytest_options = ["--xdoctest", "--cov", "--cov-report=", "--cov-fail-under=0"]
-    _run(c, f"poetry run pytest {' '.join(pytest_options)} {TEST_DIR} {SOURCE_DIR}")
+    _run(c, f"uv run pytest {' '.join(pytest_options)} {TEST_DIR} {SOURCE_DIR}")
 
 
 @task(
@@ -118,8 +111,8 @@ def coverage(c, fmt="report", open_browser=False):
     # type: (Context, str, bool) -> None
     """Create coverage report."""
     if any(Path().glob(".coverage.*")):
-        _run(c, "poetry run coverage combine")
-    _run(c, f"poetry run coverage {fmt} -i")
+        _run(c, "uv run coverage combine")
+    _run(c, f"uv run coverage {fmt} -i")
     if fmt == "html" and open_browser:
         webbrowser.open(COVERAGE_REPORT.as_uri())
 
@@ -128,7 +121,7 @@ def coverage(c, fmt="report", open_browser=False):
 def docs(c):
     # type: (Context) -> None
     """Build documentation."""
-    _run(c, "poetry run mkdocs build")
+    _run(c, "uv run mkdocs build")
 
 
 @task(pre=[clean, hooks, docs, tests, coverage])
@@ -154,4 +147,4 @@ def version(c, part, dry_run=False, allow_dirty=False):
         bump_options.append("--dry-run")
     if allow_dirty:
         bump_options.append("--allow-dirty")
-    _run(c, f"poetry run bump2version {' '.join(bump_options)} {part}")
+    _run(c, f"uv run bump2version {' '.join(bump_options)} {part}")

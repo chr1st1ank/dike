@@ -1,10 +1,9 @@
-[tool]
-[tool.poetry]
+[project]
 name = "dike"
 version = "1.0.0"
 homepage = "https://github.com/chr1st1ank/dike"
 description = "Python asyncio tools for web service resilience."
-authors = ["Christian Krudewig <chr1st1ank@krudewig-online.de>"]
+authors = [{ name = "Christian Krudewig", email = "chr1st1ank@krudewig-online.de" }]
 readme = "README.md"
 license = "Apache-2.0"
 classifiers = [
@@ -28,61 +27,49 @@ packages = [
     { include = "dike" },
     { include = "tests", format = "sdist" },
 ]
+requires-python = ">=3.7.1,<4.0"
+dependencies = []
 
-[tool.poetry.dependencies]
-python = ">=3.7.1,<4.0"
-
-[tool.poetry.extras]
+[project.optional-dependencies]
 test = [
     "pytest",
     "phmdoctest",
     "pytest-cov",
-    "yamllint"
+    "yamllint",
+    "xdoctest~=1.1"
+]
+dev = [
+    'docutils; python_version == "3.9"',
+    'bump2version ~= 1.0',
+    'fastapi ~= 0.88',
+    'httpcore ~= 0.16',
+    'httpx ~= 0.23',
+    'invoke ~= 2.0.0',
+    'mkapi',
+    'mkdocs ~= 1.4',
+    'mkdocs-autorefs',
+    'mkdocs-include-markdown-plugin',
+    'numpy ~= 1.21',
+    'phmdoctest ~= 1.2',
+    'pre-commit ~= 2.20',
+    'pytest ~= 7.1',
+    'pytest-cov',
+    'pytest-parametrized ~= 1.4',
+    'safety ~= 2.3',
+    'toml',
+    'tox',
+    'twine',
+    'uvicorn ~= 0.20',
+    'yamllint'
+]
+doc = [
+    'pymdown-extensions ~= 9.7',
+    'mkdocs ~= 1.4',
+    'mkdocs-include-markdown-plugin ~= 4.0; python_version == "3.9"',
+    'mkapi ~= 1.0',
+    'mkdocs-autorefs ~= 0.4',
 ]
 
-[tool.poetry.group.dev]
-optional = true
-
-[tool.poetry.group.dev.dependencies]
-docutils = { version = "0.21", python = "3.9" }  # Necessary to manually add because of https://github.com/pypa/twine/issues/1082
-bump2version = "^1.0"
-fastapi = {version = "^0.88"}
-httpcore = "^0.16"
-httpx = "^0.23"
-invoke = "^2.0.0"
-mkapi = { version = "*" }
-mkdocs = { version = "^1.4" }
-mkdocs-autorefs = { version = "*" }
-mkdocs-include-markdown-plugin = { version = "*" }
-numpy = "~1.21"
-phmdoctest = "^1.2"
-pip = { version = "*" }
-pre-commit = { version = "^2.20" }
-pytest = "^7.1"
-pytest-cov = { version = "*" }
-pytest-parametrized = "^1.4"
-safety = "^2.3"
-toml = { version = "*" }
-tox = { version = "*" }
-twine = { version = "*" }
-uvicorn = "^0.20"
-virtualenv = { version = "^20.16" }
-yamllint = "*"
-
-[tool.poetry.group.doc]
-optional = true
-
-[tool.poetry.group.doc.dependencies]
-pymdown-extensions = "^9.7"
-mkdocs = "^1.4"
-mkdocs-include-markdown-plugin = { version = "^4.0", python = "3.9" }
-mkapi = "^1.0"
-mkdocs-autorefs = "^0.4"
-
-
-[tool.poetry.group.test.dependencies]
-xdoctest = "^1.1.0"
-
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
