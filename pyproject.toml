@@ -44,7 +44,7 @@ dev = [
     'fastapi ~= 0.88',
     'httpcore ~= 0.16',
     'httpx ~= 0.23',
-    'invoke ~= 2.0.0',
+    'invoke ~=2.2.0',
     'mkapi',
     'mkdocs ~= 1.4',
     'mkdocs-autorefs',
