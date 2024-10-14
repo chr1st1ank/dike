@@ -8,7 +8,7 @@
     <title>Contributing - dike</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet" />
         <link href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet" />
         <link href="../css/mkapi-common.css" rel="stylesheet" />
@@ -21,12 +21,11 @@
         var mkdocs_page_url = "/chr1st1ank/dike/contributing/";
       </script>
     
-    <script src="../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -38,7 +37,7 @@
           <a href=".." class="icon icon-home"> dike
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -61,7 +60,7 @@
                 </li>
               </ul>
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Contributing</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Contributing</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#types-of-contributions">Types of Contributions</a>
         <ul>
@@ -99,18 +98,18 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Contributing</li>
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Contributing</li>
     <li class="wy-breadcrumbs-aside">
-        <a href="https://github.com/chr1st1ank/dike/edit/master/docs/contributing.md"> Edit on dike</a>
+          <a href="https://github.com/chr1st1ank/dike/edit/master/docs/contributing.md">Edit on dike</a>
     </li>
   </ul>
   <hr/>
 </div>
-
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <!-- BEGIN INCLUDE ../CONTRIBUTING.md   -->
+                <!-- BEGIN INCLUDE ../CONTRIBUTING.md -->
 <h1 id="contributing">Contributing</h1>
 <p>Contributions are welcome, and they are greatly appreciated!</p>
 <p>You can contribute in many ways:</p>
@@ -148,33 +147,28 @@ articles, and such.</p>
 <li>Fork the <code>dike</code> repo on GitHub.</li>
 <li>Clone your fork locally</li>
 </ol>
-<div class="highlight"><pre><span></span><code>    $ git clone git@github.com:your_name_here/dike.git
-</code></pre></div>
+<pre class="highlight"><code>    $ git clone git@github.com:your_name_here/dike.git</code></pre>
 <ol>
 <li>Ensure <a href="https://python-poetry.org/docs/">poetry</a> is installed.</li>
 <li>Install dependencies and start your virtualenv:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>    $ poetry install -E test -E doc -E dev
-</code></pre></div>
+<pre class="highlight"><code>    $ poetry install --with=test,doc,dev</code></pre>
 <ol>
 <li>Create a branch for local development:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>    $ git checkout -b name-of-your-bugfix-or-feature
-</code></pre></div>
+<pre class="highlight"><code>    $ git checkout -b name-of-your-bugfix-or-feature</code></pre>
 <p>Now you can make your changes locally.</p>
 <ol>
 <li>When you're done making changes, check that your changes pass the
    tests, including testing other Python versions, with tox:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>    $ tox
-</code></pre></div>
+<pre class="highlight"><code>    $ tox</code></pre>
 <ol>
 <li>Commit your changes and push your branch to GitHub:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>    $ git add .
-    $ git commit -m &quot;Your detailed description of your changes.&quot;
-    $ git push origin name-of-your-bugfix-or-feature
-</code></pre></div>
+<pre class="highlight"><code>    $ git add .
+    $ git commit -m "Your detailed description of your changes."
+    $ git push origin name-of-your-bugfix-or-feature</code></pre>
 <ol>
 <li>Submit a pull request through the GitHub website.</li>
 </ol>
@@ -194,18 +188,8 @@ articles, and such.</p>
 <p>On branch "main":
 - Adjust CHANGELOG.md as described on https://keepachangelog.com
 - Then run <code>inv version [major | minor | patch]</code>. This updates the version numbers and creates a tagged commit.
-- Push the commit to github: <code>git push --tags</code>.
+- Push the commit to github: <code>git push origin main &amp;&amp; git push --tags</code>.
 - A github action will automatically create a github release and publish to pypi.</p>
-<!-- END INCLUDE -->
-
-<!-- BEGIN INCLUDE ../AUTHORS.md   -->
-<h1 id="credits">Credits</h1>
-<h2 id="creator">Creator</h2>
-<ul>
-<li>Christian Krudewig <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#104;&#114;&#49;&#115;&#116;&#49;&#97;&#110;&#107;&#64;&#107;&#114;&#117;&#100;&#101;&#119;&#105;&#103;&#45;&#111;&#110;&#108;&#105;&#110;&#101;&#46;&#100;&#101;">&#99;&#104;&#114;&#49;&#115;&#116;&#49;&#97;&#110;&#107;&#64;&#107;&#114;&#117;&#100;&#101;&#119;&#105;&#103;&#45;&#111;&#110;&#108;&#105;&#110;&#101;&#46;&#100;&#101;</a></li>
-</ul>
-<h2 id="contributors">Contributors</h2>
-<p>None yet. Why not be the first?</p>
 <!-- END INCLUDE -->
               
             </div>
@@ -233,21 +217,26 @@ articles, and such.</p>
   <div class="rst-versions" role="note" aria-label="Versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     
+        <span>
+          <a href="https://github.com/chr1st1ank/dike" class="fa fa-code-fork" style="color: #fcfcfc"> dike</a>
+        </span>
+    
     
       <span><a href="../history/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
   </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme_extra.js" defer></script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../js/mkapi.js" defer></script>
-      <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/mkapi.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>

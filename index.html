@@ -8,7 +8,7 @@
     <title>dike</title>
     <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet" />
         <link href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet" />
         <link href="css/mkapi-common.css" rel="stylesheet" />
@@ -21,12 +21,11 @@
         var mkdocs_page_url = "/chr1st1ank/dike/";
       </script>
     
-    <script src="js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -38,14 +37,14 @@
           <a href="." class="icon icon-home"> dike
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Home</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#features">Features</a>
         <ul>
@@ -91,18 +90,18 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Home</li>
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Home</li>
     <li class="wy-breadcrumbs-aside">
-        <a href="https://github.com/chr1st1ank/dike/edit/master/docs/index.md"> Edit on dike</a>
+          <a href="https://github.com/chr1st1ank/dike/edit/master/docs/index.md">Edit on dike</a>
     </li>
   </ul>
   <hr/>
 </div>
-
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <!-- BEGIN INCLUDE ../README.md   -->
+                <!-- BEGIN INCLUDE ../README.md -->
 <h1 id="dike">dike</h1>
 <p><strong>Python asyncio tools for web service resilience</strong></p>
 <ul>
@@ -119,80 +118,72 @@ logging. There are good implementations like the <a href="https://pypi.org/proje
 package for classic functions. But dike provides a similar implementation for coroutine functions.
 This is available with the <code>@retry</code> decorator.</p>
 <p>Simplified example:
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<pre class="highlight"><code class="language-python">import asyncio
+import datetime
+import logging
+import sys
 
-<span class="kn">import</span> <span class="nn">dike</span>
-
-
-<span class="nd">@dike</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">attempts</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">milliseconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="n">exception_types</span><span class="o">=</span><span class="ne">RuntimeError</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">web_request</span><span class="p">():</span>
-    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Request failed!&quot;</span><span class="p">)</span>
+import dike
 
 
-<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">web_request</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+@dike.retry(attempts=2, delay=datetime.timedelta(milliseconds=10), exception_types=RuntimeError)
+async def web_request():
+    raise RuntimeError("Request failed!")
 
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
-<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-</code></pre></div></p>
+
+async def main():
+    response = await web_request()
+    print(response)
+
+logging.basicConfig(stream=sys.stdout)
+asyncio.run(main())</code></pre></p>
 <p>The output shows first a warning log message including the exception info (that's configurable).
 This is especially useful if you use structured logging.
-<div class="highlight"><pre><span></span><code># Log for first attempt:
-WARNING:dike:Caught exception RuntimeError(&#39;Request failed!&#39;). Retrying in 0.01s ...
+<pre class="highlight"><code># Log for first attempt:
+WARNING:dike:Caught exception RuntimeError('Request failed!'). Retrying in 0.01s ...
 Traceback (most recent call last):
 ...
-RuntimeError: Request failed!
-</code></pre></div></p>
+RuntimeError: Request failed!</code></pre></p>
 <p>Then, the for the final failure the exception is propagated to the function caller:
-<div class="highlight"><pre><span></span><code>Traceback (most recent call last):
+<pre class="highlight"><code>Traceback (most recent call last):
   ...
 RuntimeError: Request failed!
 
-Process finished with exit code 1
-</code></pre></div></p>
+Process finished with exit code 1</code></pre></p>
 <h3 id="concurrency-limiting-for-asynchronous-functions">Concurrency limiting for asynchronous functions</h3>
 <p>The <code>@limit_jobs</code> decorator allows to limit the number of concurrent excecutions of a coroutine
 function. This can be useful for limiting queueing times or for limiting the load put
 onto backend services.</p>
 <p>Example with an external web request using the <a href="https://github.com/encode/httpx">httpx</a> library:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">dike</span>
-<span class="kn">import</span> <span class="nn">httpx</span>
+<pre class="highlight"><code class="language-python">import asyncio
+import dike
+import httpx
 
 
-<span class="nd">@dike</span><span class="o">.</span><span class="n">limit_jobs</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">web_request</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Sends a slow web request&quot;&quot;&quot;</span>
-    <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://httpstat.us/200?sleep=100&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">response</span>
+@dike.limit_jobs(limit=2)
+async def web_request():
+    """Sends a slow web request"""
+    async with httpx.AsyncClient() as client:
+        response = await client.get("https://httpbin.org/status/200?sleep=100")
+    return response
 
 
-<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="c1"># Send three requests at the same time</span>
-    <span class="n">call1</span> <span class="o">=</span> <span class="n">web_request</span><span class="p">()</span>
-    <span class="n">call2</span> <span class="o">=</span> <span class="n">web_request</span><span class="p">()</span>
-    <span class="n">call3</span> <span class="o">=</span> <span class="n">web_request</span><span class="p">()</span>
-    <span class="n">responses</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">call1</span><span class="p">,</span> <span class="n">call2</span><span class="p">,</span> <span class="n">call3</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="c1"># Print the responses</span>
-    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dike</span><span class="o">.</span><span class="n">TooManyCalls</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;too many calls&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+async def main():
+    # Send three requests at the same time
+    call1 = web_request()
+    call2 = web_request()
+    call3 = web_request()
+    responses = await asyncio.gather(call1, call2, call3, return_exceptions=True)
+    # Print the responses
+    for r in responses:
+        print(r)
 
 
-<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-</code></pre></div>
+asyncio.run(main())</code></pre>
 <p>The output shows that the first two requests succeed. The third one hits the concurrency limit and a TooManyCalls exception is returned:
-<div class="highlight"><pre><span></span><code>&lt;Response [200 OK]&gt;
+<pre class="highlight"><code>&lt;Response [200 OK]&gt;
 &lt;Response [200 OK]&gt;
-too many calls
-</code></pre></div></p>
+Too many calls to function web_request! limit=2 exceeded</code></pre></p>
 <h3 id="mini-batching-for-asynchronous-function-calls">Mini-batching for asynchronous function calls</h3>
 <p>The <code>@batch</code> decorator groups function calls into batches and only calls the wrapped function
 with the aggregated input.</p>
@@ -200,40 +191,37 @@ with the aggregated input.</p>
 getting the input data in smaller bits, e.g. as individual HTTP requests.</p>
 <p>The arguments can be batched together as a Python list or optionally also as numpy array.</p>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">dike</span>
+<pre class="highlight"><code class="language-python">import asyncio
+import dike
 
 
-<span class="nd">@dike</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">target_batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_waiting_time</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">add_args</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Elementwise sum of the values in arg1 and arg2&quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;arg1: </span><span class="si">{</span><span class="n">arg1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;arg2: </span><span class="si">{</span><span class="n">arg2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">a1</span> <span class="o">+</span> <span class="n">a2</span> <span class="k">for</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)]</span>
+@dike.batch(target_batch_size=3, max_waiting_time=10)
+async def add_args(arg1, arg2):
+    """Elementwise sum of the values in arg1 and arg2"""
+    print(f"arg1: {arg1}")
+    print(f"arg2: {arg2}")
+    return [a1 + a2 for a1, a2 in zip(arg1, arg2)]
 
 
-<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-        <span class="n">add_args</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-        <span class="n">add_args</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-        <span class="n">add_args</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
-    <span class="p">)</span>
+async def main():
+    result = await asyncio.gather(
+        add_args([0], [1]),
+        add_args([1], [1]),
+        add_args([2, 3], [1, 1]),
+    )
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    print(f"Result: {result}")
 
 
-<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-</code></pre></div>
+asyncio.run(main())</code></pre>
 <p>Output:
-<div class="highlight"><pre><span></span><code>arg1: [0, 1, 2, 3]
+<pre class="highlight"><code>arg1: [0, 1, 2, 3]
 arg2: [1, 1, 1, 1]
-Result: [[1], [2], [3, 4]]
-</code></pre></div></p>
+Result: [[1], [2], [3, 4]]</code></pre></p>
 <h2 id="installation">Installation</h2>
 <p>Simply install from pypi. The library is pure Python without any dependencies other than the
 standard library.
-<div class="highlight"><pre><span></span><code>pip install dike
-</code></pre></div></p>
+<pre class="highlight"><code>pip install dike</code></pre></p>
 <!-- END INCLUDE -->
               
             </div>
@@ -261,27 +249,32 @@ standard library.
   <div class="rst-versions" role="note" aria-label="Versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     
+        <span>
+          <a href="https://github.com/chr1st1ank/dike" class="fa fa-code-fork" style="color: #fcfcfc"> dike</a>
+        </span>
+    
     
     
       <span><a href="installation/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
-    <script>var base_url = '.';</script>
-    <script src="js/theme_extra.js" defer></script>
-    <script src="js/theme.js" defer></script>
-      <script src="js/mkapi.js" defer></script>
-      <script src="search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="js/mkapi.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>
 </html>
 
 <!--
-MkDocs version : 1.3.0
-Build Date UTC : 2022-05-09 20:28:50.476109+00:00
+MkDocs version : 1.6.1
+Build Date UTC : 2024-10-14 22:29:59.310354+00:00
 -->

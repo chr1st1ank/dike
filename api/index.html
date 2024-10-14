@@ -8,7 +8,7 @@
     <title>API documentation - dike</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet" />
         <link href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet" />
         <link href="../css/mkapi-common.css" rel="stylesheet" />
@@ -21,12 +21,11 @@
         var mkdocs_page_url = "/chr1st1ank/dike/api/";
       </script>
     
-    <script src="../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -38,7 +37,7 @@
           <a href=".." class="icon icon-home"> dike
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -53,7 +52,7 @@
                 </li>
               </ul>
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">API documentation</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">API documentation</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#decorators">Decorators</a>
     </li>
@@ -83,14 +82,14 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>API documentation</li>
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">API documentation</li>
     <li class="wy-breadcrumbs-aside">
-        <a href="https://github.com/chr1st1ank/dike/edit/master/docs/api.md"> Edit on dike</a>
+          <a href="https://github.com/chr1st1ank/dike/edit/master/docs/api.md">Edit on dike</a>
     </li>
   </ul>
   <hr/>
 </div>
-
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
@@ -106,9 +105,9 @@
 </div>
 <div class="mkapi-docstring">
 <div class="mkapi-section">
-      <div class="mkapi-section-body"><p>@batch is a decorator to cumulate function calls and process them in batches.
-    Not thread-safe.</p>
-<p>The function to wrap must have arguments of type list or numpy.array which can be aggregated.
+      <div class="mkapi-section-body"><p>@batch is a decorator to cumulate function calls and process them in batches.</p>
+<p>Not thread-safe.</p>
+<p>The function to wrap must have arguments of type list or <code>numpy.array</code> which can be aggregated.
 It must return just a single value of the same type. The type has to be specified with the
 <code>argument_type</code> parameter of the decorator.</p></div>
     </div>
@@ -194,32 +193,31 @@ max_processing_time</span></li>
       <div class="mkapi-section-name example">
           <span class="mkapi-section-name-body example">Example</span> 
         </div>
-      <div class="mkapi-section-body example"><div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">dike</span>
-<span class="o">...</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nd">@dike</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">target_batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_waiting_time</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="o">...</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
-<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;arg1: </span><span class="si">{</span><span class="n">arg1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;arg2: </span><span class="si">{</span><span class="n">arg2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="o">...</span>     <span class="k">return</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-<span class="o">...</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-<span class="o">...</span>     <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-<span class="o">...</span>         <span class="n">f</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]),</span>
-<span class="o">...</span>         <span class="n">f</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]),</span>
-<span class="o">...</span>         <span class="n">f</span><span class="p">([</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]),</span>
-<span class="o">...</span>     <span class="p">)</span>
-<span class="o">...</span>
-<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="o">...</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-<span class="n">arg1</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-<span class="n">arg2</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]</span>
-<span class="n">Result</span><span class="p">:</span> <span class="p">[[</span><span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="p">[</span><span class="mi">12</span><span class="p">]]</span>
-</code></pre></div></div>
+      <div class="mkapi-section-body example"><pre class="highlight"><code class="language-python">&gt;&gt;&gt; import asyncio
+&gt;&gt;&gt; import dike
+...
+...
+&gt;&gt;&gt; @dike.batch(target_batch_size=3, max_waiting_time=10)
+... async def f(arg1, arg2):
+...     print(f"arg1: {arg1}")
+...     print(f"arg2: {arg2}")
+...     return [10, 11, 12]
+...
+...
+&gt;&gt;&gt; async def main():
+...     result = await asyncio.gather(
+...         f([0], ["a"]),
+...         f([1], ["b"]),
+...         f([2], ["c"]),
+...     )
+...
+...     print(f"Result: {result}")
+...
+...
+&gt;&gt;&gt; asyncio.run(main())
+arg1: [0, 1, 2]
+arg2: ['a', 'b', 'c']
+Result: [[10], [11], [12]]</code></pre></div>
     </div>
   </div>
 
@@ -284,35 +282,34 @@ may call the function in order to avoid race conditions.</p>
       <div class="mkapi-section-name examples">
           <span class="mkapi-section-name-body examples">Examples</span> 
         </div>
-      <div class="mkapi-section-body examples"><div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">dike</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">httpx</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">dike</span>
-<span class="o">...</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nd">@dike</span><span class="o">.</span><span class="n">limit_jobs</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="o">...</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">web_request</span><span class="p">():</span>
-<span class="o">...</span>     <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-<span class="o">...</span>         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://httpstat.us/200?sleep=100&quot;</span><span class="p">)</span>
-<span class="o">...</span>     <span class="k">return</span> <span class="n">response</span>
-<span class="o">...</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-<span class="o">...</span>     <span class="n">responses</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-<span class="o">...</span>         <span class="n">web_request</span><span class="p">(),</span> <span class="n">web_request</span><span class="p">(),</span> <span class="n">web_request</span><span class="p">(),</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span>
-<span class="o">...</span>     <span class="p">)</span>
-<span class="o">...</span>     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
-<span class="o">...</span>         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dike</span><span class="o">.</span><span class="n">_limit_jobs</span><span class="o">.</span><span class="n">TooManyCalls</span><span class="p">):</span>
-<span class="o">...</span>             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;too many calls&quot;</span><span class="p">)</span>
-<span class="o">...</span>         <span class="k">else</span><span class="p">:</span>
-<span class="o">...</span>             <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-<span class="o">...</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span> <span class="n">OK</span><span class="p">]</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span> <span class="n">OK</span><span class="p">]</span><span class="o">&gt;</span>
-<span class="n">too</span> <span class="n">many</span> <span class="n">calls</span>
-</code></pre></div></div>
+      <div class="mkapi-section-body examples"><pre class="highlight"><code class="language-python">&gt;&gt;&gt; import dike
+&gt;&gt;&gt; import asyncio
+&gt;&gt;&gt; import httpx
+&gt;&gt;&gt; import dike
+...
+...
+&gt;&gt;&gt; @dike.limit_jobs(limit=2)
+... async def web_request():
+...     async with httpx.AsyncClient() as client:
+...         response = await client.get("https://httpbin.org/status/200?sleep=100")
+...     return response
+...
+...
+&gt;&gt;&gt; async def main():
+...     responses = await asyncio.gather(
+...         web_request(), web_request(), web_request(), return_exceptions=True
+...     )
+...     for r in responses:
+...         if isinstance(r, dike._limit_jobs.TooManyCalls):
+...             print("too many calls")
+...         else:
+...             print(r)
+...
+...
+&gt;&gt;&gt; asyncio.run(main())
+&lt;Response [200 OK]&gt;
+&lt;Response [200 OK]&gt;
+too many calls</code></pre></div>
     </div>
   </div>
 
@@ -385,33 +382,32 @@ attempts. Default: True</span></li>
       <div class="mkapi-section-name examples">
           <span class="mkapi-section-name-body examples">Examples</span> 
         </div>
-      <div class="mkapi-section-body examples"><div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">httpx</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">dike</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nd">@dike</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">attempts</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">milliseconds</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
-<span class="o">...</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">web_request</span><span class="p">():</span>
-<span class="o">...</span>     <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-<span class="o">...</span>         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://httpstat.us/400&quot;</span><span class="p">)</span>
-<span class="o">...</span>         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
-<span class="o">...</span>             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Request failed!&quot;</span><span class="p">)</span>
-<span class="o">...</span>     <span class="k">return</span> <span class="n">response</span>
-<span class="o">...</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-<span class="o">...</span>     <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">web_request</span><span class="p">()</span>
-<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-<span class="o">...</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-<span class="o">...</span> <span class="c1"># Log messages from two attempts:</span>
-<span class="o">...</span> <span class="c1"># WARNING:dike:Caught exception RuntimeError(&#39;Request failed!&#39;). Retrying in 0.01s ...</span>
-<span class="o">...</span> <span class="c1"># Then:</span>
-<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-    <span class="o">...</span>
-<span class="ne">RuntimeError</span><span class="p">:</span> <span class="n">Request</span> <span class="n">failed</span><span class="err">!</span>
-</code></pre></div></div>
+      <div class="mkapi-section-body examples"><pre class="highlight"><code class="language-python">&gt;&gt;&gt; import asyncio
+&gt;&gt;&gt; import httpx
+&gt;&gt;&gt; import datetime
+&gt;&gt;&gt; import dike
+...
+&gt;&gt;&gt; @dike.retry(attempts=2, delay=datetime.timedelta(milliseconds=10))
+... async def web_request():
+...     async with httpx.AsyncClient() as client:
+...         response = await client.get("https://httpbin.org/status/400")
+...         if response.status_code != httpx.codes.OK:
+...             raise RuntimeError("Request failed!")
+...     return response
+...
+...
+&gt;&gt;&gt; async def main():
+...     response = await web_request()
+...     print(response)
+...
+...
+&gt;&gt;&gt; asyncio.run(main())
+... # Log messages from two attempts:
+... # WARNING:dike:Caught exception RuntimeError('Request failed!'). Retrying in 0.01s ...
+... # Then:
+Traceback (most recent call last):
+    ...
+RuntimeError: Request failed!</code></pre></div>
     </div>
   </div>
 
@@ -438,7 +434,7 @@ attempts. Default: True</span></li>
 </div>
     </div>
   <div class="mkapi-section">
-      <div class="mkapi-section-body"><p>Error raised by @limit_jobs when a call exceeds the preset limit</p></div>
+      <div class="mkapi-section-body"><p>Error raised by @limit_jobs when a call exceeds the preset limit.</p></div>
     </div>
   </div>
 
@@ -470,6 +466,10 @@ attempts. Default: True</span></li>
   <div class="rst-versions" role="note" aria-label="Versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     
+        <span>
+          <a href="https://github.com/chr1st1ank/dike" class="fa fa-code-fork" style="color: #fcfcfc"> dike</a>
+        </span>
+    
     
       <span><a href="../installation/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
@@ -478,15 +478,16 @@ attempts. Default: True</span></li>
     
   </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme_extra.js" defer></script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../js/mkapi.js" defer></script>
-      <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/mkapi.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>

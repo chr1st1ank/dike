@@ -8,7 +8,7 @@
     <title>Installation - dike</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet" />
         <link href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet" />
         <link href="../css/mkapi-common.css" rel="stylesheet" />
@@ -21,12 +21,11 @@
         var mkdocs_page_url = "/chr1st1ank/dike/installation/";
       </script>
     
-    <script src="../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -38,7 +37,7 @@
           <a href=".." class="icon icon-home"> dike
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -49,7 +48,7 @@
                 </li>
               </ul>
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Installation</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Installation</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#stable-release">Stable release</a>
     </li>
@@ -83,22 +82,21 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Installation</li>
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
     <li class="wy-breadcrumbs-aside">
-        <a href="https://github.com/chr1st1ank/dike/edit/master/docs/installation.md"> Edit on dike</a>
+          <a href="https://github.com/chr1st1ank/dike/edit/master/docs/installation.md">Edit on dike</a>
     </li>
   </ul>
   <hr/>
 </div>
-
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
                 <h1 id="installation">Installation</h1>
 <h2 id="stable-release">Stable release</h2>
 <p>To install dike, run this command in your terminal:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>pip install dike
-</code></pre></div>
+<pre class="highlight"><code class="language-console">$ pip install dike</code></pre>
 <p>This is the preferred method to install dike, as it will always install the most recent stable release.</p>
 <p>If you don't have <a href="https://pip.pypa.io">pip</a> installed, this <a href="http://docs.python-guide.org/en/latest/starting/installation/">Python installation guide</a>
 can guide you through the process.</p>
@@ -106,14 +104,11 @@ can guide you through the process.</p>
 <p>The source for dike can be downloaded from
 the <a href="https://github.com/chr1st1ank/dike">Github repo</a>.</p>
 <p>You can either clone the public repository:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>git clone git://github.com/chr1st1ank/dike
-</code></pre></div>
+<pre class="highlight"><code class="language-console">$ git clone git://github.com/chr1st1ank/dike</code></pre>
 <p>Or download the <a href="https://github.com/chr1st1ank/dike/tarball/master">tarball</a>:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>curl -OJL https://github.com/chr1st1ank/dike/tarball/main
-</code></pre></div>
+<pre class="highlight"><code class="language-console">$ curl -OJL https://github.com/chr1st1ank/dike/tarball/main</code></pre>
 <p>Once you have a copy of the source, you can install it with:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>pip install .
-</code></pre></div>
+<pre class="highlight"><code class="language-console">$ pip install .</code></pre>
               
             </div>
           </div><footer>
@@ -141,6 +136,10 @@ the <a href="https://github.com/chr1st1ank/dike">Github repo</a>.</p>
   <div class="rst-versions" role="note" aria-label="Versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     
+        <span>
+          <a href="https://github.com/chr1st1ank/dike" class="fa fa-code-fork" style="color: #fcfcfc"> dike</a>
+        </span>
+    
     
       <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
     
@@ -149,15 +148,16 @@ the <a href="https://github.com/chr1st1ank/dike">Github repo</a>.</p>
     
   </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme_extra.js" defer></script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../js/mkapi.js" defer></script>
-      <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/mkapi.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>
