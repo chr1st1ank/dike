@@ -58,7 +58,7 @@ dev = [
     'yamllint',
 ]
 doc = [
-    'pymdown-extensions ~= 9.7',
+    'pymdown-extensions ~=10.11',
     'mkdocs ~= 1.4',
     'mkdocs-include-markdown-plugin ~= 4.0; python_version == "3.9"',
     'mkapi ~= 1.0',
