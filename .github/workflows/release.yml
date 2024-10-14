@@ -69,7 +69,7 @@ jobs:
 
       - name: Build documentation
         run: |
-          uv pip install -e '.[doc]
+          uv pip install -e '.[doc]'
           uv run mkdocs build
 
       - name: Publish documentation
