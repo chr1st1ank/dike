@@ -42,7 +42,7 @@ dev = [
     'docutils; python_version == "3.9"',
     'bump2version ~= 1.0',
     'fastapi ~= 0.88',
-    'httpcore ~= 0.16',
+    'httpcore ~=1.0',
     'httpx ~= 0.23',
     'invoke ~= 2.0.0',
     'mkapi',
