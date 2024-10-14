@@ -40,7 +40,7 @@ dev = [
     'bump2version ~= 1.0',
     'fastapi ~= 0.88',
     'httpx ~= 0.23',
-    'invoke ~= 2.0.0',
+    'invoke ~=2.2.0',
     'mkapi',
     'mkdocs ~= 1.4',
     'mkdocs-autorefs',
