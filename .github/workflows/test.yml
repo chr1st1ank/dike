@@ -72,7 +72,7 @@ jobs:
         with:
           junit_files: pytest.xml
 
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         if: ${{ matrix.publish-results && always() }}
         with:
           fail_ci_if_error: false
