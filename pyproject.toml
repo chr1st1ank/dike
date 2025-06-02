@@ -48,7 +48,7 @@ dev = [
     'numpy',
     'phmdoctest ~= 1.2',
     'pre-commit ~= 2.20',
-    'pytest ~= 7.1',
+    'pytest ~=8.4',
     'pytest-cov',
     'pytest-parametrized ~= 1.4',
     'toml',
